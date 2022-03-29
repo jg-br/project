@@ -18,9 +18,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Toolkit;
+import javax.swing.JCheckBox;
 
 public class Login extends JFrame 
 {
+	JCheckBox adminCheckBox;
 	/**
 	 * 
 	 */
@@ -51,7 +53,7 @@ public class Login extends JFrame
 					String customerEmail = username.getText();
 					String customerPassword = new String(passwordField.getPassword());
 					int hashValue = customerPassword.hashCode();
-					customerPassword= ""+ hashValue;
+					customerPassword =""+ hashValue;
 					
 					 if (login.loginVerify(customerEmail,customerPassword)== true)
 						{
@@ -64,6 +66,16 @@ public class Login extends JFrame
 							customer.setResizable(false);
 							dispose();
 						}
+					 else if(login.adminLogin(customerEmail,customerPassword)== true)
+					 	{
+						 	Admin admin = new Admin();
+						 	admin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+							admin.setSize(800,600);
+							admin.setLocation(300,100);
+							admin.setVisible(true);
+							admin.setResizable(false);
+							dispose();
+					 	}
 					 else
 					 	{
 						 	Info log = new Info("The Email or password is incorrect please try again");
@@ -76,7 +88,7 @@ public class Login extends JFrame
 				{
 					// TODO Auto-generated catch block
 					//e1.printStackTrace();
-					ErrorMessage err = new ErrorMessage("There is an error querying the database");
+					ErrorMessage err = new ErrorMessage("Progran error"+ e1);
 					
 				
 				}
@@ -133,6 +145,7 @@ public class Login extends JFrame
 		username.setColumns(10);
 		
 		JLabel usernameLabel = new JLabel("Please Enter E-mail: ");
+		usernameLabel.setForeground(Color.BLACK);
 		springLayout.putConstraint(SpringLayout.WEST, username, 6, SpringLayout.EAST, usernameLabel);
 		springLayout.putConstraint(SpringLayout.NORTH, usernameLabel, 43, SpringLayout.NORTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, usernameLabel, 37, SpringLayout.WEST, getContentPane());
@@ -147,6 +160,7 @@ public class Login extends JFrame
 		getContentPane().add(passwordField);
 		
 		JLabel passwordLabel = new JLabel("Please Enter Passwword:");
+		passwordLabel.setForeground(Color.BLACK);
 		springLayout.putConstraint(SpringLayout.NORTH, passwordField, 0, SpringLayout.NORTH, passwordLabel);
 		springLayout.putConstraint(SpringLayout.WEST, passwordField, 25, SpringLayout.EAST, passwordLabel);
 		springLayout.putConstraint(SpringLayout.SOUTH, usernameLabel, -17, SpringLayout.NORTH, passwordLabel);

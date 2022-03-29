@@ -312,6 +312,55 @@ public class Crud  implements Connection
 				
 			}
 			
+			public boolean adminLogin(String email , String password)
+			{
+				ResultSet resultSet = null ;
+				
+				
+				try
+					{
+						// The prepared SQL statement to confirm that account details exist for the user attempting to login.
+						pstat = connection.prepareStatement("select AdminEmail, AdminPassword from Admin where AdminEmail = ? AND AdminPassword = ?");
+						pstat.setString(1, email);
+						pstat.setString(2, password);
+						// query data in the table
+						resultSet = pstat.executeQuery();
+						// process query results
+						ResultSetMetaData metaData = resultSet.getMetaData();
+						int numberOfColumns = metaData.getColumnCount();
+						while( resultSet .next() )
+							{
+								if((resultSet .getObject(1).equals(email))&&(resultSet .getObject(numberOfColumns).equals(password)));
+									{ 
+										
+										return true;
+									}
+								
+							}
+						
+					
+					}
+				catch(SQLException sqlException ) 
+					{
+						//sqlException . printStackTrace () ;
+						ErrorMessage err = new ErrorMessage("Account details not found");
+					}
+				finally 
+					{
+						try
+							{
+								resultSet . close () ;
+								pstat . close () ;
+								//connection. close () ;
+							}
+						catch (Exception exception)
+							{
+								exception . printStackTrace () ;
+							}
+					}
+				return false;
+			}
+			
 			@Override
 			public <T> T unwrap(Class<T> iface) throws SQLException {
 				// TODO Auto-generated method stub
