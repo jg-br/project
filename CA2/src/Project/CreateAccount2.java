@@ -17,7 +17,7 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 
-public class CreateAccount extends JFrame 
+public class CreateAccount2 extends JFrame 
 {
 	/**
 	 * 
@@ -37,10 +37,10 @@ public class CreateAccount extends JFrame
 	private String customerPassword;
 	private String confirmCustomerPassword;
 	
-	public CreateAccount() 
+	public CreateAccount2() 
 	{
 		super("Customer SignUp");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(CreateAccount.class.getResource("/Project/logo3b.jpg")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(CreateAccount2.class.getResource("/Project/logo3b.jpg")));
 		getContentPane().setBackground(Color.GRAY);
 		setBackground(Color.GRAY);
 		SpringLayout springLayout = new SpringLayout();
@@ -123,7 +123,8 @@ public class CreateAccount extends JFrame
 		springLayout.putConstraint(SpringLayout.EAST, confirmEmailLabel, 0, SpringLayout.EAST, addressLabel);
 		getContentPane().add(confirmEmailLabel);
 		
-		JButton cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton("Login");
+		springLayout.putConstraint(SpringLayout.WEST, cancelButton, 608, SpringLayout.WEST, getContentPane());
 		cancelButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -143,32 +144,31 @@ public class CreateAccount extends JFrame
 		getContentPane().add(cancelButton);
 		
 		passwordField = new JPasswordField();
+		springLayout.putConstraint(SpringLayout.EAST, passwordField, 0, SpringLayout.EAST, cancelButton);
 		passwordField.setFont(new Font("Verdana", Font.PLAIN, 13));
 		getContentPane().add(passwordField);
 		
 		JLabel passwordLabel = new JLabel("Please Enter Password:");
+		springLayout.putConstraint(SpringLayout.SOUTH, passwordLabel, -70, SpringLayout.SOUTH, phoneNolabel);
 		springLayout.putConstraint(SpringLayout.WEST, passwordLabel, 59, SpringLayout.EAST, phoneNo);
-		springLayout.putConstraint(SpringLayout.EAST, passwordLabel, -16, SpringLayout.WEST, passwordField);
-		springLayout.putConstraint(SpringLayout.NORTH, passwordField, 8, SpringLayout.NORTH, passwordLabel);
+		springLayout.putConstraint(SpringLayout.EAST, passwordLabel, -213, SpringLayout.EAST, getContentPane());
 		springLayout.putConstraint(SpringLayout.NORTH, passwordLabel, 209, SpringLayout.NORTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, passwordLabel, 0, SpringLayout.SOUTH, phoneNolabel);
 		passwordLabel.setLabelFor(passwordField);
 		passwordLabel.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(passwordLabel);
 		
 		confirmPasswordField = new JPasswordField();
-		springLayout.putConstraint(SpringLayout.EAST, confirmPasswordField, 0, SpringLayout.EAST, passwordField);
+		springLayout.putConstraint(SpringLayout.NORTH, confirmPasswordField, 35, SpringLayout.SOUTH, passwordField);
+		springLayout.putConstraint(SpringLayout.EAST, confirmPasswordField, -28, SpringLayout.EAST, getContentPane());
 		confirmPasswordField.setFont(new Font("Verdana", Font.PLAIN, 13));
 		getContentPane().add(confirmPasswordField);
 		
 		JLabel confirmPasswordLabel = new JLabel("Confirm Password:");
-		confirmPasswordLabel.setLabelFor(confirmPasswordField);
-		springLayout.putConstraint(SpringLayout.NORTH, confirmPasswordField, 2, SpringLayout.NORTH, confirmPasswordLabel);
 		springLayout.putConstraint(SpringLayout.WEST, confirmPasswordField, 16, SpringLayout.EAST, confirmPasswordLabel);
-		springLayout.putConstraint(SpringLayout.NORTH, confirmPasswordLabel, 6, SpringLayout.SOUTH, passwordLabel);
-		springLayout.putConstraint(SpringLayout.WEST, confirmPasswordLabel, 0, SpringLayout.WEST, passwordLabel);
-		springLayout.putConstraint(SpringLayout.SOUTH, confirmPasswordLabel, -9, SpringLayout.SOUTH, emailLabel);
+		springLayout.putConstraint(SpringLayout.NORTH, confirmPasswordLabel, -2, SpringLayout.NORTH, confirmPasswordField);
+		springLayout.putConstraint(SpringLayout.WEST, confirmPasswordLabel, 59, SpringLayout.EAST, email);
 		springLayout.putConstraint(SpringLayout.EAST, confirmPasswordLabel, 0, SpringLayout.EAST, passwordLabel);
+		confirmPasswordLabel.setLabelFor(confirmPasswordField);
 		confirmPasswordLabel.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(confirmPasswordLabel);
 		
@@ -183,11 +183,11 @@ public class CreateAccount extends JFrame
 		getContentPane().add(textPaneAddress);
 		
 		JButton createAccountButton = new JButton("Create Account");
+		springLayout.putConstraint(SpringLayout.SOUTH, confirmPasswordLabel, -62, SpringLayout.NORTH, createAccountButton);
+		springLayout.putConstraint(SpringLayout.NORTH, createAccountButton, 357, SpringLayout.NORTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, createAccountButton, -213, SpringLayout.EAST, getContentPane());
 		springLayout.putConstraint(SpringLayout.NORTH, cancelButton, 0, SpringLayout.NORTH, createAccountButton);
-		springLayout.putConstraint(SpringLayout.WEST, cancelButton, 53, SpringLayout.EAST, createAccountButton);
-		springLayout.putConstraint(SpringLayout.NORTH, createAccountButton, 12, SpringLayout.SOUTH, confirmPasswordLabel);
 		springLayout.putConstraint(SpringLayout.SOUTH, createAccountButton, -22, SpringLayout.SOUTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, createAccountButton, 0, SpringLayout.EAST, passwordLabel);
 		springLayout.putConstraint(SpringLayout.WEST, createAccountButton, 59, SpringLayout.EAST, confirmEmail);
 		createAccountButton.addActionListener(new ActionListener()
 		{
@@ -245,10 +245,31 @@ public class CreateAccount extends JFrame
 		getContentPane().add(createAccountButton);
 		
 		JLabel iconLabel = new JLabel("");
-		springLayout.putConstraint(SpringLayout.EAST, passwordField, 0, SpringLayout.EAST, iconLabel);
+		springLayout.putConstraint(SpringLayout.NORTH, passwordField, 24, SpringLayout.SOUTH, iconLabel);
 		springLayout.putConstraint(SpringLayout.NORTH, iconLabel, 0, SpringLayout.NORTH, name);
 		springLayout.putConstraint(SpringLayout.EAST, iconLabel, -28, SpringLayout.EAST, getContentPane());
-		iconLabel.setIcon(new ImageIcon(CreateAccount.class.getResource("/Project/logo3a.jpg")));
+		iconLabel.setIcon(new ImageIcon(CreateAccount2.class.getResource("/Project/logo3a.jpg")));
 		getContentPane().add(iconLabel);
+		
+		JButton admin = new JButton("administrator");
+		admin.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				Admin admin = new Admin();
+			 	admin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				admin.setSize(800,600);
+				admin.setLocation(300,100);
+				admin.setVisible(true);
+				admin.setResizable(false);
+				dispose();
+			}
+		});
+		springLayout.putConstraint(SpringLayout.NORTH, admin, 17, SpringLayout.SOUTH, confirmPasswordField);
+		springLayout.putConstraint(SpringLayout.WEST, admin, 0, SpringLayout.WEST, cancelButton);		
+		springLayout.putConstraint(SpringLayout.SOUTH, admin, -15, SpringLayout.NORTH, cancelButton);
+		springLayout.putConstraint(SpringLayout.EAST, admin, -28, SpringLayout.EAST, getContentPane());
+		admin.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		getContentPane().add(admin);
 	}
 }

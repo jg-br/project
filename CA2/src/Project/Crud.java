@@ -1,4 +1,7 @@
 package Project;
+/* Student Name: John Brennan
+ * Student ID:c00114371
+ * Date: */
 import java.sql.Array;   
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -214,7 +217,7 @@ public class Crud  implements Connection
 							{
 								resultSet . close () ;
 								pstat . close () ;
-								//connection. close () ;
+								connection. close () ;
 							}
 						catch (Exception exception)
 							{
@@ -262,7 +265,7 @@ public class Crud  implements Connection
 							{
 								resultSet . close () ;
 								pstat . close () ;
-								//connection. close () ;
+								connection. close () ;
 							}
 						catch (Exception ex)
 							{
@@ -272,7 +275,7 @@ public class Crud  implements Connection
 					}
 				return result;
 			}
-			
+			//	Customer version of the Customer update method.
 			public void customerUpdateDetails(String name, String address, String phone, String id ) 
 			{
 				try 
@@ -311,6 +314,9 @@ public class Crud  implements Connection
 				}
 				
 			}
+			
+			
+// Administrator methods
 			
 			public boolean adminLogin(String email , String password)
 			{
@@ -359,6 +365,219 @@ public class Crud  implements Connection
 							}
 					}
 				return false;
+			}
+			
+			//	Administrator version of the customer update method.
+			public void adminCustomerUpdateDetails(String name, String address, String phone,String email, String id ) 
+			{
+				try 
+				{
+					
+					pstat = connection.prepareStatement("UPDATE Customer SET CustomerName=?, CustomerAddress=?, CustomerPhone=?, CustomerEmail=?  WHERE CustomerId=?");
+					pstat.setString (1, name ) ;
+					pstat.setString (2, address);
+					pstat.setString (3, phone);
+					pstat.setString(4, email);
+					pstat.setString (5, id);
+									
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " Details successfully updated");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlException) 
+				{
+					sqlException.printStackTrace () ;
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception exception)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Error creating Account");
+						}
+				}
+				
+			}
+			
+			public void adminProductUpdateDetails(String supplier, String model, String desc,String qty,String cost, String retail, String id ) 
+			{
+				try 
+				{
+					
+					pstat = connection.prepareStatement( "UPDATE Product SET SupplierId=?, ModelNo=?, Description=?, QuantityInStock=?, ProductCost=?, ProductRetail=? where ProductID = ?");
+					pstat.setString (1, supplier ) ;
+					pstat.setString (2, model);
+					pstat.setString (3, desc);
+					pstat.setString(4, qty);
+					pstat.setString(5, cost);
+					pstat.setString(6, retail);
+					pstat.setString (7, id);
+									
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " Details successfully updated");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlException) 
+				{
+					sqlException.printStackTrace () ;
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception exception)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Error creating Account");
+						}
+				}
+				
+			}
+			//	delete a customer/product/supplier
+			public void adminDelete(String query, String id)
+			{
+				try 
+				{
+					
+					pstat = connection.prepareStatement(query);				
+					pstat.setString (1, id);
+									
+					// Delete Customer from Customer table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " Account Successfully Deleted");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlException) 
+				{
+					ErrorMessage err = new ErrorMessage("Error Deleting Account "+sqlException);
+					
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception exception)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Error Deleting Account "+ exception);
+						}
+				}
+			}
+			
+			//	product Update
+			
+			public boolean supplierCheck(String supplierId)
+			{
+				String result="";
+				ResultSet resultSet = null ;
+				
+				
+				try
+					{
+						// The prepared SQL statement to confirm that account details exist for the user attempting to login.
+						pstat = connection.prepareStatement("select SupplierID from Supplier where SupplierID= ?");
+						pstat.setString(1, supplierId);
+						// query data in the table
+						resultSet = pstat.executeQuery();
+						// process query results
+						ResultSetMetaData metaData = resultSet.getMetaData();
+						int numberOfColumns = metaData.getColumnCount();
+						
+						
+						while( resultSet .next() )
+							{
+								if(supplierId.equals(resultSet.getString(1)))
+								{
+									return true;
+								}
+								
+							}
+						
+						
+					}
+				catch(SQLException error) 
+					{
+						//sqlException . printStackTrace () ;
+						ErrorMessage err = new ErrorMessage("Error retrieving Customer Details from the Database"+ error);
+					}
+				finally 
+					{
+						try
+							{
+								resultSet . close () ;
+								pstat . close () ;
+								connection. close () ;
+							}
+						catch (Exception ex)
+							{
+								//exception . printStackTrace () ;
+								ErrorMessage err = new ErrorMessage("The database is unavailable "+ ex);
+							}
+					}
+				return false;
+			}
+			
+			
+			public void insertProduct(String sId, String model, String desc, String qty, String cost,String retail) 
+			{
+				try 
+				{
+					
+					pstat = connection.prepareStatement("INSERT INTO Product (SupplierID, ModelNo, Description,QuantityInStock, ProductCost, ProductRetail) VALUES (?,?,?,?,?,?)");
+					pstat.setString (1, sId ) ;
+					pstat.setString (2, model);
+					pstat.setString (3, desc);
+					pstat.setString (4, qty);
+					pstat.setString (5, cost);	
+					pstat.setString(6, retail);
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " New Product record successfully created.");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlEx) 
+				{
+				ErrorMessage err = new ErrorMessage("Database error" + sqlEx);
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception ex)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Error creating Product record" + ex);
+						}
+				}
+				
 			}
 			
 			@Override

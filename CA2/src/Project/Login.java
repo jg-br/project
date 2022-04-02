@@ -1,8 +1,9 @@
 package Project;
-
-import java.awt.GraphicsConfiguration;   
+/* Student Name: John Brennan
+ * Student ID:c00114371
+ * Date: */
+import java.awt.GraphicsConfiguration;    
 import java.awt.HeadlessException;
-
 import javax.swing.JFrame;
 import javax.swing.SpringLayout;
 import javax.swing.JButton;
@@ -13,16 +14,14 @@ import javax.swing.JPasswordField;
 import java.awt.Component;
 import javax.swing.Box;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Toolkit;
-import javax.swing.JCheckBox;
 
 public class Login extends JFrame 
 {
-	JCheckBox adminCheckBox;
+	
 	/**
 	 * 
 	 */
@@ -48,26 +47,18 @@ public class Login extends JFrame
 
 				try 
 				{
-					Crud login = new Crud();
+					Crud login = new Crud(); // Opens a database connection
 					
-					String customerEmail = username.getText();
-					String customerPassword = new String(passwordField.getPassword());
-					int hashValue = customerPassword.hashCode();
-					customerPassword =""+ hashValue;
+					String customerEmail = username.getText();	//	retrieves the data in the username text field
+					String customerPassword = new String(passwordField.getPassword()); /// converts the character based password field into a string
+					int hashValue = customerPassword.hashCode(); //	 runs java's built in hash function 
+					customerPassword =""+ hashValue;	//	 Concatenates the has value with a blank string
 					
-					 if (login.loginVerify(customerEmail,customerPassword)== true)
-						{
-							
-							Customer customer = new Customer(customerEmail);
-							customer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-							customer.setSize(800,600);
-							customer.setLocation(300,100);
-							customer.setVisible(true);
-							customer.setResizable(false);
-							dispose();
-						}
-					 else if(login.adminLogin(customerEmail,customerPassword)== true)
+					 
+					if(login.adminLogin(customerEmail,customerPassword)== true)	//	 if the username/password combination is not found in the customer table
+						 //	the Admin table is compared with the username/password combination
 					 	{
+						 	//	if true the Admin window is instantiated 
 						 	Admin admin = new Admin();
 						 	admin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 							admin.setSize(800,600);
@@ -76,10 +67,21 @@ public class Login extends JFrame
 							admin.setResizable(false);
 							dispose();
 					 	}
+					 else if (login.loginVerify(customerEmail,customerPassword)== true)	//	checks the customer table to see if the email/password combination are there
+						{
+							//	 if so the customer window is instantiated 
+							Customer customer = new Customer(customerEmail);
+							customer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+							customer.setSize(800,600);
+							customer.setLocation(300,100);
+							customer.setVisible(true);
+							customer.setResizable(false);
+							dispose();
+						}
 					 else
 					 	{
-						 	Info log = new Info("The Email or password is incorrect please try again");
-						 	username.setText("");
+						 	Info log = new Info("The Email or password is incorrect please try again");	// if no match is found the information message tells the user same
+						 	username.setText("");	//	clears the email/password fields.
 						 	passwordField.setText("");
 					 	}
 					
@@ -88,7 +90,7 @@ public class Login extends JFrame
 				{
 					// TODO Auto-generated catch block
 					//e1.printStackTrace();
-					ErrorMessage err = new ErrorMessage("Progran error"+ e1);
+					ErrorMessage err = new ErrorMessage("Progran error"+ e1);	//	general error message
 					
 				
 				}
@@ -101,7 +103,7 @@ public class Login extends JFrame
 		login.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(login);
 		
-		JButton cancel = new JButton("Cancel");
+		JButton cancel = new JButton("Clear");
 		cancel.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -122,7 +124,7 @@ public class Login extends JFrame
 		createAccount.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
-			{
+			{	//	instantiates the create account window when the create account button is clicked.
 				CreateAccount customer = new CreateAccount();
 				customer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				customer.setSize(800,400);
@@ -173,6 +175,7 @@ public class Login extends JFrame
 		springLayout.putConstraint(SpringLayout.EAST, passwordLabel, 178, SpringLayout.WEST, getContentPane());
 		getContentPane().add(passwordLabel);
 		
+			//	company logo displayed via jlabel
 		JLabel lblNewLabel = new JLabel("");
 		springLayout.putConstraint(SpringLayout.EAST, passwordField, -113, SpringLayout.WEST, lblNewLabel);
 		springLayout.putConstraint(SpringLayout.NORTH, lblNewLabel, 22, SpringLayout.NORTH, getContentPane());

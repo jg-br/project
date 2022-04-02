@@ -1,5 +1,7 @@
 package Project;
-
+/* Student Name: John Brennan 
+ * Student ID:c00114371
+ * Date: */
 import javax.swing.Icon;
 
 import javax.swing.ImageIcon;

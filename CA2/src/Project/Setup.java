@@ -1,5 +1,7 @@
 package Project;
-
+/* Student Name: John Brennan
+ * Student ID:c00114371
+ * Date: */
 import java.awt.GraphicsConfiguration;   
 import java.awt.HeadlessException;
 
@@ -39,7 +41,7 @@ public class Setup extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				 try
-					{					
+					{		//	Regenerates the login window if the cancel button is pressed.			
 			        	Login  login = new Login();
 						login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 						login.setSize(680, 230);
@@ -75,7 +77,7 @@ public class Setup extends JFrame
 		        	String user = username.getText();
 		        	String pass = new String(passwordField.getPassword());
 		        	Config t = new Config(user,pass);
-		        	t.setCredentials();
+		        	t.setCredentials();// sets the new database user/password combination
 					
 		        	Login  login = new Login();
 					login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

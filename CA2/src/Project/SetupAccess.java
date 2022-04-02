@@ -1,12 +1,12 @@
 package Project;
-
+/* Student Name: John Brennan 
+ * Student ID:c00114371
+ * Date: */
 import java.awt.GraphicsConfiguration;   
 import java.awt.HeadlessException;
-
 import javax.swing.JFrame;
 import javax.swing.SpringLayout;
 import javax.swing.JButton;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JPasswordField;
@@ -23,7 +23,7 @@ public class SetupAccess extends JFrame
 	private static final long serialVersionUID = 1L;
 	private JPasswordField passwordField;
 
-	public SetupAccess() throws HeadlessException 
+	public SetupAccess()  
 	{
 		super("Configure Database Connection");
 		setBackground(Color.GRAY);
@@ -33,8 +33,9 @@ public class SetupAccess extends JFrame
 		getContentPane().setLayout(springLayout);
 		
 		JButton cancel = new JButton("Cancel");
-		springLayout.putConstraint(SpringLayout.WEST, cancel, 289, SpringLayout.WEST, getContentPane());
-		cancel.addActionListener(new ActionListener() 
+		springLayout.putConstraint(SpringLayout.WEST, cancel, 289, SpringLayout.WEST, getContentPane()); // sets the components position in relation to other 
+		// components with in the JFrame
+		cancel.addActionListener(new ActionListener() // Action listener for the cancel button, 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -46,18 +47,18 @@ public class SetupAccess extends JFrame
 						login.setLocation(500,400);
 						login.setResizable(false);
 						login.setVisible(true);
-						dispose();
+						dispose();//	disposes of the setup access window and and regenerates the login window if the user presses cancel.
 
 					}
-				catch(Exception e1)
+				catch(Exception e1) // catches any general exceptions and  displays an error message.
 					{
-						ErrorMessage err = new ErrorMessage("Unknown Error");
+						ErrorMessage err = new ErrorMessage("Unknown Error"+ e1);
 					}        
 				
 			}
 		});
 		cancel.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		getContentPane().add(cancel);
+		getContentPane().add(cancel);	//adds the button to the content pane.
 		
 		JButton setup = new JButton("Enter Setup");
 		springLayout.putConstraint(SpringLayout.NORTH, setup, 0, SpringLayout.NORTH, cancel);
@@ -70,9 +71,10 @@ public class SetupAccess extends JFrame
 		        try
 				{
 		        	
-		        	String pass = new String(passwordField.getPassword());
-		        	if(pass.equals("1234"))
-			        	{	        		
+		        	String pass = new String(passwordField.getPassword());	// creates a String object from the password character field.
+		        	if(pass.equals("1234"))	// hard coded password
+			        	{	 
+		        			// Instantiates a new window object
 			               	Setup setup = new Setup();
 							setup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 							setup.setSize(680, 230);
@@ -85,11 +87,11 @@ public class SetupAccess extends JFrame
 				}
 			catch(Exception e1)
 				{
-					ErrorMessage err = new ErrorMessage("Unknown Error");
+					ErrorMessage err = new ErrorMessage("Error"+e1);
 				}        
 			}
 		});
-		setup.setToolTipText("Create new account");
+		setup.setToolTipText("Enter program setup");
 		setup.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(setup);
 		
@@ -100,7 +102,7 @@ public class SetupAccess extends JFrame
 		springLayout.putConstraint(SpringLayout.WEST, passwordField, 241, SpringLayout.WEST, getContentPane());
 		getContentPane().add(passwordField);
 		
-		JLabel iconLabel = new JLabel("");
+		JLabel iconLabel = new JLabel(""); // Company logo added 
 		springLayout.putConstraint(SpringLayout.EAST, cancel, -17, SpringLayout.WEST, iconLabel);
 		springLayout.putConstraint(SpringLayout.NORTH, iconLabel, 27, SpringLayout.NORTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, iconLabel, 440, SpringLayout.WEST, getContentPane());
@@ -109,7 +111,7 @@ public class SetupAccess extends JFrame
 		iconLabel.setIcon(new ImageIcon(SetupAccess.class.getResource("/Project/logo3b.jpg")));
 		getContentPane().add(iconLabel);
 		
-		JLabel passwordLabel = new JLabel("Enter Setup Password:");
+		JLabel passwordLabel = new JLabel("Enter Setup Password:");	//	Label for the password field.
 		springLayout.putConstraint(SpringLayout.SOUTH, setup, 52, SpringLayout.SOUTH, passwordLabel);
 		springLayout.putConstraint(SpringLayout.EAST, setup, 0, SpringLayout.EAST, passwordLabel);
 		springLayout.putConstraint(SpringLayout.WEST, passwordLabel, 55, SpringLayout.WEST, getContentPane());

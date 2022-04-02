@@ -1,4 +1,7 @@
 package Project;
+/* Student Name: John Brennan 
+ * Student ID:c00114371
+ * Date: */
 import java.util.prefs.Preferences;
 
 public class Config 
