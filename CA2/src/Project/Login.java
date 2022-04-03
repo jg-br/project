@@ -14,6 +14,7 @@ import javax.swing.JPasswordField;
 import java.awt.Component;
 import javax.swing.Box;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -55,7 +56,7 @@ public class Login extends JFrame
 					customerPassword =""+ hashValue;	//	 Concatenates the has value with a blank string
 					
 					 
-					if(login.adminLogin(customerEmail,customerPassword)== true)	//	 if the username/password combination is not found in the customer table
+					if(login.adminLogin(customerEmail,customerPassword)== true)	//	 if the username/password combination is not found in the Admin table
 						 //	the Admin table is compared with the username/password combination
 					 	{
 						 	//	if true the Admin window is instantiated 
@@ -66,6 +67,15 @@ public class Login extends JFrame
 							admin.setVisible(true);
 							admin.setResizable(false);
 							dispose();
+							try 
+								{
+									login.close();
+								} 
+							catch (Exception e1) 
+								{
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}							
 					 	}
 					 else if (login.loginVerify(customerEmail,customerPassword)== true)	//	checks the customer table to see if the email/password combination are there
 						{
@@ -77,12 +87,30 @@ public class Login extends JFrame
 							customer.setVisible(true);
 							customer.setResizable(false);
 							dispose();
+							try
+								{
+									login.close();	
+								}
+							catch(SQLException sqlE)
+							{
+								//	Error dialogue when an SQL error is caught
+								ErrorMessage err = new ErrorMessage("Error Querying the Database"+sqlE);
+							}
 						}
 					 else
 					 	{
 						 	Info log = new Info("The Email or password is incorrect please try again");	// if no match is found the information message tells the user same
 						 	username.setText("");	//	clears the email/password fields.
 						 	passwordField.setText("");
+						 	try
+								{
+									login.close();
+								}
+						 	catch(SQLException sqlE)
+								{
+						 			//	Error dialogue when an SQL error is caught
+									ErrorMessage err = new ErrorMessage("Error Querying the Database"+sqlE);
+								}
 					 	}
 					
 				} 

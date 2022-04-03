@@ -42,10 +42,10 @@ public class Crud  implements Connection
 						connection = DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword()); 
 						
 					}
-				catch(Exception exception) 
+				catch(SQLException ex) 
 					{
-						ErrorMessage err = new ErrorMessage("Error connecting to the Database");
-						//sqlException.printStackTrace () ;
+						ErrorMessage err = new ErrorMessage("Error connecting to the Database"+ex);
+						
 					}
 			}
 			
@@ -131,7 +131,7 @@ public class Crud  implements Connection
 							}
 					}
 			}
-			
+			//	method to ensure that the email entered when creating an account does NOT already exist in the customer table.
 			public boolean emailCheck(String email )
 			{
 				ResultSet resultSet = null ;
@@ -178,6 +178,7 @@ public class Crud  implements Connection
 					}
 				return false;
 			}
+			//	verifying the customer credentials when logging in.
 			public boolean loginVerify(String email , String password)
 			{
 				ResultSet resultSet = null ;
@@ -199,7 +200,7 @@ public class Crud  implements Connection
 								if((resultSet .getObject(1).equals(email))&&(resultSet .getObject(numberOfColumns).equals(password)));
 									{ 
 										
-										return true;
+										return true;	// returns true only if both username and password equal those entered on the login screen.
 									}
 								
 							}
@@ -226,7 +227,7 @@ public class Crud  implements Connection
 					}
 				return false;
 			}
-			
+			//	method to display customer details on the customer page when they log in.
 			public String customerDetails(String email)
 			{
 				String result="";
@@ -248,7 +249,7 @@ public class Crud  implements Connection
 						while( resultSet .next() )
 							{
 								for ( int i = 1; i <= numberOfColumns; i++ )
-									result +=resultSet.getObject(i)+",";
+									result +=resultSet.getObject(i)+",";	//	Concatenates  each column in the resultSet to the result string and returns it to the calling method in the customer page.
 								
 							}
 						
@@ -348,20 +349,22 @@ public class Crud  implements Connection
 					}
 				catch(SQLException sqlException ) 
 					{
-						//sqlException . printStackTrace () ;
-						ErrorMessage err = new ErrorMessage("Account details not found");
+						//	Error dialogue when an SQL error is caught
+						ErrorMessage err = new ErrorMessage("Error Querying the Database"+ sqlException);
 					}
 				finally 
 					{
 						try
 							{
 								resultSet . close () ;
-								pstat . close () ;
+								pstat . close () ;	//	the connection is left open to check the credentials against the customer table next. (it is closed if returns true when generating the admin window
+								//	if not it is closed when generating the customer window or when displaying the message that the account details are incorrect.
 								//connection. close () ;
 							}
 						catch (Exception exception)
-							{
-								exception . printStackTrace () ;
+							{	
+								//	Error dialogue to display catch any non_SQL Errors
+								ErrorMessage err = new ErrorMessage("Error logging in");
 							}
 					}
 				return false;
@@ -401,8 +404,8 @@ public class Crud  implements Connection
 						}
 					catch (Exception exception)
 						{
-							//exception.printStackTrace () ;
-							ErrorMessage err = new ErrorMessage("Error creating Account");
+							//	Error dialogue to display catch any non_SQL Errors
+							ErrorMessage err = new ErrorMessage("Error Updating Account details");
 						}
 				}
 				
@@ -443,7 +446,47 @@ public class Crud  implements Connection
 						}
 					catch (Exception exception)
 						{
-							//exception.printStackTrace () ;
+							//	Error dialogue to display catch any non_SQL Errors.
+							ErrorMessage err = new ErrorMessage("Error creating Account");
+						}
+				}
+				
+			}
+			
+			public void adminSuppliertUpdateDetails(String name, String address, String phone,String email, String id ) 
+			{
+				try 
+				{
+					
+					pstat = connection.prepareStatement( "UPDATE Supplier SET SupplierName=?, SupplierAddress=?, SupplierPhoneNo=?, SupplierEmail=? where SupplierID = ?");
+					pstat.setString (1, name ) ;
+					pstat.setString (2, address);
+					pstat.setString (3, phone);
+					pstat.setString(4, email);					
+					pstat.setString (5, id);
+									
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " Details successfully updated");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlException) 
+				{
+					sqlException.printStackTrace () ;
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception exception)
+						{
+							//	Error dialogue to display catch any non_SQL Errors.
 							ErrorMessage err = new ErrorMessage("Error creating Account");
 						}
 				}
@@ -480,17 +523,17 @@ public class Crud  implements Connection
 						}
 					catch (Exception exception)
 						{
-							//exception.printStackTrace () ;
+//							Error dialogue to display catch any non_SQL Errors.
 							ErrorMessage err = new ErrorMessage("Error Deleting Account "+ exception);
 						}
 				}
 			}
 			
-			//	product Update
+		
 			
+			//	Method to check if the supplier ID entered exists in the supplier table
 			public boolean supplierCheck(String supplierId)
 			{
-				String result="";
 				ResultSet resultSet = null ;
 				
 				
@@ -501,14 +544,9 @@ public class Crud  implements Connection
 						pstat.setString(1, supplierId);
 						// query data in the table
 						resultSet = pstat.executeQuery();
-						// process query results
-						ResultSetMetaData metaData = resultSet.getMetaData();
-						int numberOfColumns = metaData.getColumnCount();
-						
-						
 						while( resultSet .next() )
 							{
-								if(supplierId.equals(resultSet.getString(1)))
+								if(supplierId.equals(resultSet.getString(1))) //	returns true only if the supplier ID entered in the add product window exists in the supplier table.
 								{
 									return true;
 								}
@@ -519,7 +557,7 @@ public class Crud  implements Connection
 					}
 				catch(SQLException error) 
 					{
-						//sqlException . printStackTrace () ;
+						//	Displays an error dialogue with the SQL exception error.
 						ErrorMessage err = new ErrorMessage("Error retrieving Customer Details from the Database"+ error);
 					}
 				finally 
@@ -528,18 +566,18 @@ public class Crud  implements Connection
 							{
 								resultSet . close () ;
 								pstat . close () ;
-								connection. close () ;
+								connection. close () ;	//	Closes the resultSet, pstat,and connection objectsS
 							}
 						catch (Exception ex)
 							{
-								//exception . printStackTrace () ;
+								//	Error dialogue to display catch any non_SQL Errors.
 								ErrorMessage err = new ErrorMessage("The database is unavailable "+ ex);
 							}
 					}
 				return false;
 			}
 			
-			
+			//	insert product method
 			public void insertProduct(String sId, String model, String desc, String qty, String cost,String retail) 
 			{
 				try 
@@ -554,15 +592,57 @@ public class Crud  implements Connection
 					pstat.setString(6, retail);
 					// insert data into table
 					
-					int status = pstat.executeUpdate();
+					int status = pstat.executeUpdate();	//	Executing the query
 					String message = (status + " New Product record successfully created.");
+					
+					Info mess = new Info(message);	//	Displays a message upon successful insertion of a product reecord into the database 
+				}
+				
+			catch(SQLException sqlEx) 
+				{
+				ErrorMessage err = new ErrorMessage("Database error" + sqlEx);	//	displays an error dialogue with the SQL error
+				}
+			finally 
+				{
+					try 
+						{	//	Closes the prepared statement and the connection object.
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception ex)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Error creating Product record" + ex);	//	Displays an error dialogue for non-SQL errors.
+						}
+				}
+				
+			}
+			
+			
+			
+			//	insert supplier method.
+			public void insertSupplier(String name, String address, String phone, String email) 
+			{
+				try 
+				{
+					//	Insert statement for supplier 
+					pstat = connection.prepareStatement("INSERT INTO Supplier (SupplierName, SupplierAddress, SupplierPhoneNo,SupplierEmail) VALUES (?,?,?,?)");
+					pstat.setString (1, name ) ;
+					pstat.setString (2, address);
+					pstat.setString (3, phone);
+					pstat.setString (4, email);
+					
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " New Supplier record successfully created.");
 					
 					Info mess = new Info(message);
 				}
 				
 			catch(SQLException sqlEx) 
 				{
-				ErrorMessage err = new ErrorMessage("Database error" + sqlEx);
+					ErrorMessage err = new ErrorMessage("Database error" + sqlEx);	//	displays an error dialogue box with the SQL error message
 				}
 			finally 
 				{
@@ -574,10 +654,47 @@ public class Crud  implements Connection
 					catch (Exception ex)
 						{
 							//exception.printStackTrace () ;
-							ErrorMessage err = new ErrorMessage("Error creating Product record" + ex);
+							ErrorMessage err = new ErrorMessage("Error creating Product record" + ex);	//	Displays an error dialogue with any non-SQL errors 
 						}
 				}
 				
+			}
+			
+			//	Basket operations
+			public void insertBasket(String prodID, String qty) 
+			{
+				try 
+				{
+					//	Insert statement for supplier 
+					pstat = connection.prepareStatement("INSERT INTO Basket (ProductID,Quantity) VALUES (?,?)");
+					pstat.setString (1, prodID ) ;
+					pstat.setString (2, qty);
+					
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " New item(s) added to basket");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlEx) 
+				{
+					ErrorMessage err = new ErrorMessage("Database error" + sqlEx);	//	displays an error dialogue box with the SQL error message
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception ex)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Error adding item to basket" + ex);	//	Displays an error dialogue with any non-SQL errors 
+						}
+				}
 			}
 			
 			@Override

@@ -15,18 +15,24 @@ import javax.swing.JTable;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 
 public class Customer extends JFrame
 {
-	private JTable orderHistory;
 	private JTextField phoneNoField;
 	private JTextField emailField;
 	private JTextField accountNumber;
@@ -38,6 +44,8 @@ public class Customer extends JFrame
 	private int split=0;
 	private String[] arr = new String[4];
 	private JTextField nameField;
+	private JTable table;
+	
 	public Customer(String email) 
 	{
 			Crud c = new Crud();
@@ -55,7 +63,7 @@ public class Customer extends JFrame
 			address=arr[2];
 			phone=arr[3];
 		
-
+			
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Customer.class.getResource("/Project/logo3b.jpg")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,18 +78,16 @@ public class Customer extends JFrame
 		springLayout.putConstraint(SpringLayout.SOUTH, orderPanel, -73, SpringLayout.SOUTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, orderPanel, -23, SpringLayout.EAST, getContentPane());
 		getContentPane().add(orderPanel);
-		orderPanel.setLayout(new BorderLayout(0, 0));
-		
-		// Table to display the order history
-		orderHistory = new JTable();
-		orderHistory.setFont(new Font("Verdana", Font.PLAIN, 13));
-		orderPanel.add(orderHistory, BorderLayout.CENTER);
+		SpringLayout sl_orderPanel = new SpringLayout();
+		orderPanel.setLayout(sl_orderPanel);
 		
 		JLabel orderHistoryLabel = new JLabel("Order History");
+		sl_orderPanel.putConstraint(SpringLayout.NORTH, orderHistoryLabel, 0, SpringLayout.NORTH, orderPanel);
+		sl_orderPanel.putConstraint(SpringLayout.WEST, orderHistoryLabel, 0, SpringLayout.WEST, orderPanel);
+		sl_orderPanel.putConstraint(SpringLayout.EAST, orderHistoryLabel, 741, SpringLayout.WEST, orderPanel);
 		orderHistoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		orderHistoryLabel.setLabelFor(orderHistory);
 		orderHistoryLabel.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		orderPanel.add(orderHistoryLabel, BorderLayout.NORTH);
+		orderPanel.add(orderHistoryLabel);
 		
 		// Panel for customer details
 		JPanel customerPanel = new JPanel();
@@ -102,8 +108,6 @@ public class Customer extends JFrame
 		addressDetails.setEditable(false);
 		addressDetails.setLineWrap(true);
 		addressDetails.setWrapStyleWord(true);
-		JScrollPane scrollPane = new JScrollPane();
-        getContentPane().add(scrollPane, BorderLayout.CENTER);
 		customerPanel.add(addressDetails);
 		
 		// Labels for the customers name and address
@@ -226,26 +230,37 @@ public class Customer extends JFrame
 				nameField.setEditable(false);
 				phoneNoField.setEditable(false);
 				addressDetails.setEditable(false);
-				updateDetailsButton.setEnabled(false);
-			
-				
-				
-			}
-
-			
+				updateDetailsButton.setEnabled(false);			
+			}			
 		});
 		updateDetailsButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		getContentPane().add(updateDetailsButton);
-		
+		getContentPane().add(updateDetailsButton);		
 		JButton changePasswoord = new JButton("Change password");
 		springLayout.putConstraint(SpringLayout.NORTH, changePasswoord, 1, SpringLayout.NORTH, viewProductButton);
 		changePasswoord.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(changePasswoord);
 		
-		JButton closeAccount = new JButton("Close Account");
+		JButton closeAccount = new JButton("View Orders");
+		closeAccount.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				genTable(account);
+			}
+		});
 		springLayout.putConstraint(SpringLayout.EAST, changePasswoord, -33, SpringLayout.WEST, closeAccount);
 		springLayout.putConstraint(SpringLayout.NORTH, closeAccount, 1, SpringLayout.NORTH, viewProductButton);
 		springLayout.putConstraint(SpringLayout.EAST, closeAccount, 0, SpringLayout.EAST, orderPanel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		sl_orderPanel.putConstraint(SpringLayout.NORTH, scrollPane, 39, SpringLayout.SOUTH, orderHistoryLabel);
+		sl_orderPanel.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, orderPanel);
+		sl_orderPanel.putConstraint(SpringLayout.SOUTH, scrollPane, 18, SpringLayout.SOUTH, orderPanel);
+		sl_orderPanel.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, orderHistoryLabel);
+		orderPanel.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
 		closeAccount.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(closeAccount);
 		
@@ -273,4 +288,77 @@ public class Customer extends JFrame
 		
 		
 	}
-}
+	
+	public void genTable(String ID)
+ 	{
+ 		
+	 		Config t = new Config();
+			// database URL
+			final String DATABASE_URL = "jdbc:mysql://localhost:64000/CA3";
+			Connection con = null ;
+			PreparedStatement pstat=null;
+			
+	 		try 
+		 		{
+		 			con= DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword()); 
+					pstat = con.prepareStatement("Select Invoice.InvoiceID,Product.ProductID,Product.ModelNo,Product.Description,InvoiceProduct.Qty,ProductRetail \r\n"
+							+ "from Invoice inner join Customer on Customer.CustomerID=Invoice.CustomerId \r\n"
+							+ "inner Join InvoiceProduct on InvoiceProduct.InvoiceID= Invoice.InvoiceId inner join \r\n"
+							+ "Product on InvoiceProduct.ProductId= Product.ProductID  where Customer.CustomerID=?");
+					pstat.setString(1,ID);
+					
+					ResultSet result = pstat.executeQuery();
+					ResultSetMetaData metaData = result.getMetaData();
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					model.setRowCount(0);
+					
+					int columns =metaData.getColumnCount();
+					String[] headings= new String[columns];
+					
+					for(int i=0;i< columns;i++)
+						{
+							headings[i] = metaData.getColumnName(i+1);
+						}
+					model.setColumnIdentifiers(headings);
+					
+					String id,name,address,email,phone,password,retail;
+					while(result.next())
+						{
+							
+									id= result.getString(1);
+									name=result.getString(2);
+									address=result.getString(3);
+									email=result.getString(4);
+									phone=result.getString(5);							
+									password=result.getString(6);
+									String[] row = {id,name,address,email,phone,password};
+									model.addRow(row);
+							
+						}
+					
+						
+						result.close();
+					
+				} 
+	 		catch (SQLException e1) 
+	 			{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+	 			}
+	 		finally
+	 			{
+	 				try
+	 					{
+							con.close();
+							pstat.close();
+	 					} 
+	 				catch (SQLException e1) 
+		 				{
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	 				
+	 				
+	 			}
+ 	}
+}//	end of file

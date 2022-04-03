@@ -37,7 +37,7 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
 
-public class Admin extends JFrame  
+public class Shop extends JFrame  
 {
 	private JTable table;
 	private JTextField textField;
@@ -48,11 +48,11 @@ public class Admin extends JFrame
 	private JTextField textField5;
 	private JTextField textField6;
 	private String state;
- 	public Admin()
+ 	public Shop()
 	{	
 		
 		super("Administrator");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Admin.class.getResource("/Project/logo3b.jpg")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Shop.class.getResource("/Project/logo3b.jpg")));
 		getContentPane().setBackground(Color.GRAY);
 		setBackground(Color.GRAY);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -180,31 +180,49 @@ public class Admin extends JFrame
 		 textField5.setFont(new Font("Verdana", Font.PLAIN, 13));
 		 textField5.setVisible(false);
 		 
-		 JButton UpdateCustomer = new JButton("Update Customer");
-		 sl_display.putConstraint(SpringLayout.NORTH, UpdateCustomer, 6, SpringLayout.SOUTH, scrollPane);
-		 sl_display.putConstraint(SpringLayout.WEST, UpdateCustomer, 0, SpringLayout.WEST, display);
-		 UpdateCustomer.addActionListener(new ActionListener() 
+		 JButton addToBasket = new JButton("Add to Basket");
+		 sl_display.putConstraint(SpringLayout.NORTH, addToBasket, 6, SpringLayout.SOUTH, scrollPane);
+		 sl_display.putConstraint(SpringLayout.WEST, addToBasket, 0, SpringLayout.WEST, display);
+		 addToBasket.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
 		 		try
 		 			{
 			 			
-		 				Crud update = new Crud();
-				 		update.adminCustomerUpdateDetails(textField1.getText(),textField2.getText(),textField3.getText(),textField4.getText(),textField.getText());
-				 		String query ="SELECT * from Customer";
-				 		genTable(query);
-				 		clear();
-				 		
-				 		try 
-					 		{
-								update.close();
-							} 
-					 	catch (SQLException e1) 
-					 		{
-								
-					 		ErrorMessage err = new ErrorMessage("Error Updating Customer records. "+e1);
-							}
+		 				Crud add = new Crud();
+
+		 				int stock = Integer.parseInt(textField3.getText());
+		 				int ordered= Integer.parseInt(textField5.getText());
+		 				System.out.println(stock+"\n"+ordered);
+		 				if(stock >=ordered)
+			 				{
+			 				
+						 		String query ="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product";
+						 		genTable(query);
+						 		clear();
+						 		
+						 		try 
+							 		{
+										add.close();
+									} 
+							 	catch (SQLException e1) 
+							 		{
+										
+							 		ErrorMessage err = new ErrorMessage("Error Updating Customer records. "+e1);
+									}
+			 				}
+		 				else
+		 					{
+		 						Info info= new Info("the quantity ordered exceeds the stock available");
+		 						textField5.setText("");
+		 					}
+		 				
+		 			}
+		 		catch(NumberFormatException nfe)
+		 			{
+		 				ErrorMessage err = new ErrorMessage("the value entered Must be a whole number ");
+		 				textField5.setText("");
 		 			}
 		 		catch(Exception e2)
 		 			{
@@ -213,13 +231,13 @@ public class Admin extends JFrame
 		 		
 		 	}
 		 });
-		 UpdateCustomer.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 UpdateCustomer.setVisible(false);
-		 display.add(UpdateCustomer);
+		 addToBasket.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 addToBasket.setVisible(false);
+		 display.add(addToBasket);
 		 
-		 JButton deleteCustomerBtn = new JButton("Delete Customer");
+		 JButton deleteCustomerBtn = new JButton("Remove from basket");
 		 sl_display.putConstraint(SpringLayout.NORTH, deleteCustomerBtn, 6, SpringLayout.SOUTH, scrollPane);
-		 sl_display.putConstraint(SpringLayout.EAST, UpdateCustomer, -6, SpringLayout.WEST, deleteCustomerBtn);
+		 sl_display.putConstraint(SpringLayout.EAST, addToBasket, -6, SpringLayout.WEST, deleteCustomerBtn);
 		 deleteCustomerBtn.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
@@ -228,8 +246,8 @@ public class Admin extends JFrame
 		 			{
 		 			
 				 		Crud delete=new Crud();
-				 		String query ="DELETE from Customer  WHERE CustomerId=?";
-				 		String q2="select * from Customer";
+				 		String query ="DELETE from basket   WHERE ProductID=?";
+				 		String q2="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where ProductID > 0";
 				 		String id= textField.getText();
 				 		delete.adminDelete(query, id);
 				 		clear();
@@ -288,26 +306,26 @@ public class Admin extends JFrame
 		 textField3.setVisible(false);
 		 textField3.setColumns(10);
 		 
-		 JButton productUpdate = new JButton("Product Update");
-		 sl_display.putConstraint(SpringLayout.WEST, productUpdate, 272, SpringLayout.WEST, display);
-		 sl_display.putConstraint(SpringLayout.EAST, deleteCustomerBtn, -6, SpringLayout.WEST, productUpdate);
-		 sl_display.putConstraint(SpringLayout.NORTH, productUpdate, 6, SpringLayout.SOUTH, scrollPane);
-		 productUpdate.addActionListener(new ActionListener() 
+		 JButton clearBasket = new JButton("Clear Basket");
+		 sl_display.putConstraint(SpringLayout.WEST, clearBasket, 272, SpringLayout.WEST, display);
+		 sl_display.putConstraint(SpringLayout.EAST, deleteCustomerBtn, -6, SpringLayout.WEST, clearBasket);
+		 sl_display.putConstraint(SpringLayout.NORTH, clearBasket, 6, SpringLayout.SOUTH, scrollPane);
+		 clearBasket.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
 		 		try
 	 			{
 		 			
-	 				Crud update = new Crud();
-			 		update.adminProductUpdateDetails(textField1.getText(),textField2.getText(),textField3.getText(),textField4.getText(),textField5.getText(),textField6.getText(),textField.getText());
-			 		String query ="SELECT * from Product";
+	 				Crud clear = new Crud();
+	 				clear.adminDelete("delete * from Basket", "*");
+			 		String query ="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where ProductID > 0";
 			 		genTable(query);
 			 		clear();
 			 		
 			 		try 
 				 		{
-							update.close();
+							clear.close();
 						} 
 				 	catch (SQLException e1) 
 				 		{
@@ -321,9 +339,9 @@ public class Admin extends JFrame
 	 			}
 		 	}
 		 });
-		 productUpdate.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 productUpdate.setVisible(false);
-		 display.add(productUpdate);
+		 clearBasket.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 clearBasket.setVisible(false);
+		 display.add(clearBasket);
 		 
 		 //	Delete a product
 		 JButton productDelete = new JButton("Product Delete");
@@ -370,7 +388,7 @@ public class Admin extends JFrame
 		 springLayout.putConstraint(SpringLayout.EAST, test3, -32, SpringLayout.WEST, textField3);
 		 sl_display.putConstraint(SpringLayout.WEST, test3, 0, SpringLayout.WEST, display);
 		 sl_display.putConstraint(SpringLayout.SOUTH, test3, -6, SpringLayout.NORTH, display);
-		 sl_display.putConstraint(SpringLayout.EAST, test3, 15, SpringLayout.EAST, UpdateCustomer);
+		 sl_display.putConstraint(SpringLayout.EAST, test3, 15, SpringLayout.EAST, addToBasket);
 		 test3.setVisible(false);
 		 getContentPane().add(test3);
 		 test3.setFont(new Font("Times New Roman", Font.BOLD, 13));
@@ -464,7 +482,7 @@ public class Admin extends JFrame
 		 springLayout.putConstraint(SpringLayout.EAST, lblNewLabel, -28, SpringLayout.WEST, test4);
 		 
 		 //	Company Logo
-		 lblNewLabel.setIcon(new ImageIcon(Admin.class.getResource("/Project/logo3a.jpg")));
+		 lblNewLabel.setIcon(new ImageIcon(Shop.class.getResource("/Project/logo3a.jpg")));
 		 getContentPane().add(lblNewLabel);
 		 
 		 // the menu bar upon which the menus sit.
@@ -476,195 +494,77 @@ public class Admin extends JFrame
 		 Component verticalStrut_3 = Box.createVerticalStrut(16);
 		 menuBar.add(verticalStrut_3);
 		 
-		 JMenu customerMenu = new JMenu("Customer Menu");
-		 menuBar.add(customerMenu);
-		 
-		 JMenuItem mntmNewMenuItem = new JMenuItem("Add Customer");
-		 mntmNewMenuItem.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		CreateAccount2 customer = new CreateAccount2();
-				customer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				customer.setSize(820,460);
-				customer.setLocation(300,200);
-				customer.setVisible(true);
-				customer.setResizable(false);
-				dispose();
-		 	}
-		 });
-		 
-		 JMenuItem viewCustomers = new JMenuItem("View Customers");
-		 viewCustomers.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{	
-		 		title.setText("Customer Window");
-		 		state= "select CustomerName, CustomerAddress, CustomerPhone, CustomerEmail from Customer where CustomerId = ?";
-		 		hide();
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(false);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(false);
-		 		
-		 		test.setVisible(false);test1.setVisible(false);test2.setVisible(false);test3.setVisible(false);
-		 		test4.setVisible(false);test5.setVisible(false);test6.setVisible(false);
-		 		clear();
-		 		String query ="SELECT * from Customer";
-		 		genTable(query);
-			}
-		 });
-		 customerMenu.add(viewCustomers);
-		 customerMenu.add(mntmNewMenuItem);
-		 
-		 JMenuItem UpdateCustomers = new JMenuItem("Update Customer Details");
-		 UpdateCustomers.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		state= "select CustomerName, CustomerAddress, CustomerPhone, CustomerEmail from Customer where CustomerId = ?";
-		 		title.setText("Customer Window");
-		 		test.setVisible(true);
-		 		textField.setVisible(true);
-		 		test.setText("ID :");
-		 		
-		 		test1.setVisible(true);
-		 		textField1.setVisible(true);
-		 		test1.setText(" Name:");
-		 		
-		 		test2.setVisible(true);
-		 		textField2.setVisible(true);
-		 		test2.setText("Address:");
-		 		
-		 		test3.setVisible(true);
-		 		textField3.setVisible(true);
-		 		test3.setText("Phone No:");
-		 		
-		 		test4.setVisible(true);
-		 		textField4.setVisible(true);
-		 		test4.setText("Email:");
-		 		
-		 		test5.setVisible(false);
-		 		textField5.setVisible(false);
-		 		
-		 		test6.setVisible(false);
-		 		textField6.setVisible(false);
-		 		
-		 		UpdateCustomer.setVisible(true);
-		 		productUpdate.setVisible(false);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(false);
-		 		clear();
-		 	}
-		 });
-		 customerMenu.add(UpdateCustomers);
-		 
-		 JMenuItem deleteCustomer = new JMenuItem("Delete Customer ");
-		 deleteCustomer.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		state= "select CustomerName, CustomerAddress, CustomerPhone, CustomerEmail from Customer where CustomerId = ?";
-		 		title.setText("Customer Window");
-		 		test.setVisible(true);
-		 		textField.setVisible(true);
-		 		test.setText("ID :");
-		 		
-		 		test1.setVisible(true);
-		 		textField1.setVisible(true);
-		 		test1.setText(" Name:");
-		 		
-		 		test2.setVisible(true);
-		 		textField2.setVisible(true);
-		 		test2.setText("Address:");
-		 		
-		 		test3.setVisible(true);
-		 		textField3.setVisible(true);
-		 		test3.setText("Phone No:");
-		 		
-		 		test4.setVisible(true);
-		 		textField4.setVisible(true);
-		 		test4.setText("Email:");
-		 		
-		 		test5.setVisible(false);
-		 		textField5.setVisible(false);
-		 		
-		 		test6.setVisible(false);
-		 		textField6.setVisible(false);
-		 		
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(false);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(true);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(false);
-		 		clear();
-		 	}
-		 });
-		 customerMenu.add(deleteCustomer);
-		 
 		 Component verticalStrut = Box.createVerticalStrut(20);
 		 menuBar.add(verticalStrut);
 		 
-		 JMenu ProductMenu = new JMenu("Product Menu");
+		 JMenu ProductMenu = new JMenu("Shop Menu");
+		 ProductMenu.setHorizontalAlignment(SwingConstants.CENTER);
 		 menuBar.add(ProductMenu);
 		 
-		 JMenuItem mntmNewMenuItem_1 = new JMenuItem("Add Product");
-		 mntmNewMenuItem_1.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-
-				AddProduct  add= new AddProduct();
-				add.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				add.setSize(810, 430);
-				add.setLocation(300,200);
-				add.setResizable(false);
-				add.setVisible(true);
-				dispose();
-		 	}
-		 });
-		 
-		 JMenuItem ViewProducts = new JMenuItem("Display Inventory");
+		 JMenuItem ViewProducts = new JMenuItem("View Product Catalogue");
 		 ViewProducts.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
 		 		title.setText("Product Window");
 		 		clear();
-		 		state= "select SupplierId, ModelNo, Description, QuantityInStock,ProductCost, ProductRetail from Product where ProductID = ?";
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(false);
+		 		title.setText("Product Catalogue");
+		 		test.setVisible(true);
+		 		textField.setVisible(true);
+		 		test.setText("Product ID:");
+		 		
+		 		test1.setVisible(true);
+		 		textField1.setVisible(true);
+		 		textField1.setEditable(false);
+		 		test1.setText(" Model:");
+		 		
+		 		test2.setVisible(true);
+		 		textField2.setVisible(true);
+		 		textField2.setEditable(false); 		 		
+		 		test2.setText("Description:");
+		 		
+		 		test3.setVisible(true);
+		 		textField3.setVisible(true);
+		 		textField3.setEditable(false);
+		 		test3.setText("In Stock:");
+		 		
+		 		test4.setVisible(true);
+		 		textField4.setVisible(true);
+		 		textField4.setEditable(false);
+		 		test4.setText("Unit Price:");
+		 		
+		 		test5.setVisible(true);
+		 		textField5.setVisible(true);
+		 		test5.setText("Order Quantity:");
+		 		
+		 		test6.setVisible(true);
+		 		textField6.setVisible(false);
+		 		test6.setText("Unit Retail:");
+		 		
+		 		addToBasket.setVisible(true);
+		 		clearBasket.setVisible(true);
 		 		updateSupplier_1.setVisible(false);
 		 		
 		 		deleteCustomerBtn.setVisible(false);
 		 		productDelete.setVisible(false);
 		 		deleteSupplier_1.setVisible(false);
+		 		clear();
+		 
 		 		
-		 		test.setVisible(false);test1.setVisible(false);test2.setVisible(false);test3.setVisible(false);
-		 		test4.setVisible(false);test5.setVisible(false);test6.setVisible(false);
-		 		hide();
-		 		String query ="SELECT * from Product";
+		 		String query ="SELECT ProductID as 'Product ID', ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where  QuantityInStock >0";
+		 		state="SELECT ModelNo, Description,QuantityInStock , ProductRetail  From Product where ProductID=?";
 		 		genTable(query);
 		 		
 		 	}
 		 });
 		 ProductMenu.add(ViewProducts);
-		 ProductMenu.add(mntmNewMenuItem_1);
 		 
-		 JMenuItem updateProducts = new JMenuItem("Update Product details");
+		 JMenuItem updateProducts = new JMenuItem("Update Quantity");
 		 updateProducts.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
-		 		state= "select SupplierId, ModelNo, Description, QuantityInStock,ProductCost, ProductRetail from Product where ProductID = ?";
+		 		state= "select SupplierId, ModelNo, Description, QuantityInStock,ProductCost, ProductRetail from Product where ProductID = ? ";
 		 		title.setText("Product Window");
 		 		test.setVisible(true);
 		 		textField.setVisible(true);
@@ -694,8 +594,8 @@ public class Admin extends JFrame
 		 		textField6.setVisible(true);
 		 		test6.setText("Unit Retail:");
 		 		
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(true);
+		 		addToBasket.setVisible(false);
+		 		clearBasket.setVisible(true);
 		 		updateSupplier_1.setVisible(false);
 		 		
 		 		deleteCustomerBtn.setVisible(false);
@@ -707,7 +607,7 @@ public class Admin extends JFrame
 		 });
 		 ProductMenu.add(updateProducts);
 		 
-		 JMenuItem deleteProducts = new JMenuItem("Delete Products from Inventory");
+		 JMenuItem deleteProducts = new JMenuItem("Remove From Basket");
 		 deleteProducts.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
@@ -742,8 +642,8 @@ public class Admin extends JFrame
 		 		textField6.setVisible(true);
 		 		test6.setText("Unit Retail:");
 		 		
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(false);
+		 		addToBasket.setVisible(false);
+		 		clearBasket.setVisible(false);
 		 		updateSupplier_1.setVisible(false);
 		 		
 		 		deleteCustomerBtn.setVisible(false);
@@ -756,144 +656,6 @@ public class Admin extends JFrame
 		 
 		 Component verticalStrut_1 = Box.createVerticalStrut(20);
 		 menuBar.add(verticalStrut_1);
-		 
-		 JMenu supplierMenu = new JMenu("Supplier Menu");
-		 menuBar.add(supplierMenu);
-		 
-		 JMenuItem viewSupplier = new JMenuItem("View Supplier");
-		 viewSupplier.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		state= "select SupplierName, SupplierAddress, SupplierPhoneNo, SupplierEmail from Supplier where SupplierID = ?";
-		 		title.setText("Supplier Window");
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(false);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(false);
-		 		
-		 		test.setVisible(false);test1.setVisible(false);test2.setVisible(false);test3.setVisible(false);
-		 		test4.setVisible(false);test5.setVisible(false);test6.setVisible(false);
-		 		hide();
-		 		clear();
-		 		
-		 		String query ="SELECT * from Supplier";
-		 		genTable(query);
-		 	}
-		 });
-		 supplierMenu.add(viewSupplier);
-		 
-		 JMenuItem mntmNewMenuItem_2 = new JMenuItem("Add Supplier");
-		 mntmNewMenuItem_2.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		AddSupplier supply = new AddSupplier();
-		 		supply.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		 		supply.setSize(720,430);
-		 		supply.setLocation(300,200);
-		 		supply.setVisible(true);
-		 		dispose();
-		 	}
-		 });
-		 supplierMenu.add(mntmNewMenuItem_2);
-		 
-		 JMenuItem updateSupplier = new JMenuItem("Update Supplier Details");
-		 updateSupplier.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		state= "select SupplierName, SupplierAddress, SupplierPhoneNo, SupplierEmail from Supplier where SupplierID = ?";
-		 		title.setText("Supplier Window");
-		 		test.setVisible(true);
-		 		textField.setVisible(true);
-		 		test.setText("ID:");
-		 		
-		 		test1.setVisible(true);
-		 		textField1.setVisible(true);
-		 		test1.setText("Name:");
-		 		
-		 		test2.setVisible(true);
-		 		textField2.setVisible(true);
-		 		test2.setText("Address:");
-		 		
-		 		test3.setVisible(true);
-		 		textField3.setVisible(true);
-		 		test3.setText("Phone:");
-		 		
-		 		test4.setVisible(true);
-		 		textField4.setVisible(true);
-		 		test4.setText("E-mail:");
-		 		
-		 		test5.setVisible(false);
-		 		textField5.setVisible(false);
-		 		test5.setText("");
-		 		
-		 		test6.setVisible(false);
-		 		textField6.setVisible(false);
-		 		test6.setText("");
-		 		
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(false);
-		 		updateSupplier_1.setVisible(true);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(false);
-		 		clear();
-		 	}
-		 });
-		 supplierMenu.add(updateSupplier);
-		 
-		 JMenuItem deleteSupplier = new JMenuItem("Delete supplier from Database");
-		 deleteSupplier.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		state= "select SupplierName, SupplierAddress, SupplierPhoneNo, SupplierEmail from Supplier where SupplierID = ?";
-		 		title.setText("Supplier Window");
-		 		test.setVisible(true);
-		 		textField.setVisible(true);
-		 		test.setText("ID:");
-		 		
-		 		test1.setVisible(true);
-		 		textField1.setVisible(true);
-		 		test1.setText("Name:");
-		 		
-		 		test2.setVisible(true);
-		 		textField2.setVisible(true);
-		 		test2.setText("Address:");
-		 		
-		 		test3.setVisible(true);
-		 		textField3.setVisible(true);
-		 		test3.setText("Phone:");
-		 		
-		 		test4.setVisible(true);
-		 		textField4.setVisible(true);
-		 		test4.setText("E-mail:");
-		 		
-		 		test5.setVisible(false);
-		 		textField5.setVisible(false);
-		 		test5.setText("");
-		 		
-		 		test6.setVisible(false);
-		 		textField6.setVisible(false);
-		 		test6.setText("");
-		 		
-		 		UpdateCustomer.setVisible(false);
-		 		productUpdate.setVisible(false);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(true);
-		 		clear();
-		 	}
-		 });
-		 supplierMenu.add(deleteSupplier);
 		 
 		 Component verticalStrut_2 = Box.createVerticalStrut(20);
 		 menuBar.add(verticalStrut_2);
@@ -1016,10 +778,10 @@ public class Admin extends JFrame
 							textField3.setText(resultSet.getString(3));
 							textField4.setText(resultSet.getString(4));
 							
-							if(columns==6)
+							if(columns==5)
 								{
 									textField5.setText(resultSet.getString(5));
-									textField6.setText(resultSet.getString(6));
+								
 								}
 							
 						}
