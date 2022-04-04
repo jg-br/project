@@ -938,7 +938,7 @@ public class Admin extends JFrame
 									
 									
 									
-							if(columns==6)
+							if(columns==6)	//	Allows for different numbers of columns to be used when generating different table content
 								{
 									password=result.getString(6);
 									String[] row = {id,name,address,email,phone,password};

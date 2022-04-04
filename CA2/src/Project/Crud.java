@@ -661,14 +661,14 @@ public class Crud  implements Connection
 			}
 			
 			//	Basket operations
-			public void insertBasket(String prodID, String qty) 
+			public void insertBasket(int prodID, int qty) 
 			{
 				try 
 				{
 					//	Insert statement for supplier 
 					pstat = connection.prepareStatement("INSERT INTO Basket (ProductID,Quantity) VALUES (?,?)");
-					pstat.setString (1, prodID ) ;
-					pstat.setString (2, qty);
+					pstat.setInt (1, prodID ) ;
+					pstat.setInt (2, qty);
 					
 					// insert data into table
 					
@@ -697,6 +697,80 @@ public class Crud  implements Connection
 				}
 			}
 			
+			public void updatetBasket(int prodID, int qty) 
+			{
+				try 
+				{
+					//	Insert statement for supplier 
+					pstat = connection.prepareStatement("UPDATE Basket SET Quantity= ? where ProductID =?");
+					pstat.setInt (1, qty);
+					pstat.setInt (2, prodID ) ;
+					
+					
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + "  Product Quantity updated basket");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlEx) 
+				{
+					ErrorMessage err = new ErrorMessage("Database error" + sqlEx);	//	displays an error dialogue box with the SQL error message
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception ex)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Error adding item to basket" + ex);	//	Displays an error dialogue with any non-SQL errors 
+						}
+				}
+			}
+			
+			
+			
+			public void basketDelete( int id)
+			{
+				try 
+				{
+					
+					pstat = connection.prepareStatement("Delete from Basket where ProductID = ?");				
+					pstat.setInt (1, id);
+									
+					// Delete Customer from Customer table
+					
+					int status = pstat.executeUpdate();
+					String message = (status + " Item Successfully Deleted");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlException) 
+				{
+					ErrorMessage err = new ErrorMessage("Error Deleting Item ");
+					
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception exception)
+						{
+//							Error dialogue to display catch any non_SQL Errors.
+							ErrorMessage err = new ErrorMessage("Error Deleting Account "+ exception);
+						}
+				}
+			}
 			@Override
 			public <T> T unwrap(Class<T> iface) throws SQLException {
 				// TODO Auto-generated method stub

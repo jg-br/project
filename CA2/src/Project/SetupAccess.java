@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 public class SetupAccess extends JFrame 
 {
@@ -26,6 +27,7 @@ public class SetupAccess extends JFrame
 	public SetupAccess()  
 	{
 		super("Configure Database Connection");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(SetupAccess.class.getResource("/Project/logo3b.jpg")));
 		setBackground(Color.GRAY);
 		getContentPane().setBackground(Color.GRAY);
 		

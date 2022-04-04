@@ -208,7 +208,21 @@ public class Customer extends JFrame
 		nameField.setColumns(10);
 		
 		// Buttons for to view the product catalogue, update customer details
-		JButton viewProductButton = new JButton("View Products");
+		JButton viewProductButton = new JButton("Shop");
+		viewProductButton.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				Shop shop = new Shop(email);
+				shop.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				shop.setSize(800,600);
+				shop.setLocation(300,100);
+				shop.setVisible(true);
+				shop.setResizable(false);
+				dispose();
+				
+			}
+		});
 		springLayout.putConstraint(SpringLayout.EAST, viewProductButton, 127, SpringLayout.WEST, orderPanel);
 		viewProductButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		springLayout.putConstraint(SpringLayout.NORTH, viewProductButton, 23, SpringLayout.SOUTH, orderPanel);

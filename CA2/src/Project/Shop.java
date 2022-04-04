@@ -40,18 +40,17 @@ import javax.swing.SwingConstants;
 public class Shop extends JFrame  
 {
 	private JTable table;
-	private JTextField textField;
-	private JTextField textField1;
-	private JTextField textField2;
-	private JTextField textField3;
-	private JTextField textField4;
-	private JTextField textField5;
-	private JTextField textField6;
+	private JTextField idTxtField;
+	private JTextField modelTxtField;
+	private JTextField descTxtField;
+	private JTextField inStockTxtField;
+	private JTextField priceTxtField;
+	private JTextField orderQtyTxtField;
 	private String state;
- 	public Shop()
+ 	public Shop(String email)
 	{	
 		
-		super("Administrator");
+		super("Shop");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Shop.class.getResource("/Project/logo3b.jpg")));
 		getContentPane().setBackground(Color.GRAY);
 		setBackground(Color.GRAY);
@@ -62,6 +61,7 @@ public class Shop extends JFrame
 		//	jpanel containing JTable and Jbuttons
 		 JPanel display = new JPanel();
 		 springLayout.putConstraint(SpringLayout.WEST, display, 10, SpringLayout.WEST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.SOUTH, display, -10, SpringLayout.SOUTH, getContentPane());
 		 springLayout.putConstraint(SpringLayout.EAST, display, -10, SpringLayout.EAST, getContentPane());
 		 display.setBackground(Color.GRAY);
 		 display.setVisible(true); 
@@ -86,144 +86,133 @@ public class Shop extends JFrame
 		 scrollPane.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		 display.add(scrollPane);	//	adds the scroll pane (with Jtable) to the display panel
 		 
-		 JLabel test = new JLabel("New label");
-		 test.setVisible(false);
-		 test.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 getContentPane().add(test);
+		 JLabel idLabel = new JLabel("ID:");
+		 springLayout.putConstraint(SpringLayout.WEST, idLabel, 20, SpringLayout.WEST, getContentPane());
+		 idLabel.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 getContentPane().add(idLabel);
 		 
-		 textField = new JTextField();
-		 springLayout.putConstraint(SpringLayout.NORTH, test, 5, SpringLayout.NORTH, textField);
-		 springLayout.putConstraint(SpringLayout.EAST, test, -32, SpringLayout.WEST, textField);
-		 springLayout.putConstraint(SpringLayout.WEST, textField, 131, SpringLayout.WEST, getContentPane());
-		 textField.setFont(new Font("Verdana", Font.PLAIN, 13));
+		 idTxtField = new JTextField();
+		 springLayout.putConstraint(SpringLayout.WEST, idTxtField, 131, SpringLayout.WEST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.NORTH, idLabel, 5, SpringLayout.NORTH, idTxtField);
+		 springLayout.putConstraint(SpringLayout.EAST, idLabel, -32, SpringLayout.WEST, idTxtField);
+		 idTxtField.setFont(new Font("Verdana", Font.PLAIN, 13));
 		
-		 textField.addActionListener(new ActionListener()
+		 idTxtField.addActionListener(new ActionListener()
 		 {
 			 private final static String newline="\n";		//	generates an action when the return key is pressed
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
-		 		String text = textField.getText();
-		 		textField.selectAll();
+		 		String text = idTxtField.getText();
+		 		idTxtField.selectAll();
 		 		getResults(text);		//	Fills the other fields the details gathered from the ID field. 	 		
 		 	}
 		 });
-		 textField.setVisible(false);
-		 getContentPane().add(textField);
-		 textField.setColumns(10);
+		 getContentPane().add(idTxtField);
+		 idTxtField.setColumns(10);
 		 
-		 JLabel test1 = new JLabel("New label");
-		 springLayout.putConstraint(SpringLayout.WEST, test, 0, SpringLayout.WEST, test1);
-		 test1.setVisible(false);
-		 springLayout.putConstraint(SpringLayout.NORTH, test1, 57, SpringLayout.NORTH, getContentPane());
-		 springLayout.putConstraint(SpringLayout.WEST, test1, 20, SpringLayout.WEST, getContentPane());
-		 springLayout.putConstraint(SpringLayout.EAST, test1, -687, SpringLayout.EAST, getContentPane());
-		 test1.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 getContentPane().add(test1);
+		 JLabel modelLanel = new JLabel("Model:");
+		 springLayout.putConstraint(SpringLayout.WEST, modelLanel, 20, SpringLayout.WEST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.EAST, modelLanel, 0, SpringLayout.EAST, idLabel);
+		 modelLanel.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 getContentPane().add(modelLanel);
 		 
-		 textField1 = new JTextField();
-		 springLayout.putConstraint(SpringLayout.SOUTH, textField, -12, SpringLayout.NORTH, textField1);
-		 springLayout.putConstraint(SpringLayout.EAST, textField1, 0, SpringLayout.EAST, textField);
-		 springLayout.putConstraint(SpringLayout.WEST, textField1, 32, SpringLayout.EAST, test1);
-		 textField1.setFont(new Font("Verdana", Font.PLAIN, 13));
-		 springLayout.putConstraint(SpringLayout.NORTH, textField1, -1, SpringLayout.NORTH, test1);
-		 textField1.setVisible(false);
-		 textField1.setColumns(10);
-		 getContentPane().add(textField1);
+		 modelTxtField = new JTextField();
+		 springLayout.putConstraint(SpringLayout.WEST, modelTxtField, 32, SpringLayout.EAST, modelLanel);
+		 springLayout.putConstraint(SpringLayout.NORTH, modelLanel, 5, SpringLayout.NORTH, modelTxtField);
+		 springLayout.putConstraint(SpringLayout.SOUTH, idTxtField, -30, SpringLayout.NORTH, modelTxtField);
+		 modelTxtField.setFont(new Font("Verdana", Font.PLAIN, 13));
+		 modelTxtField.setColumns(10);
+		 getContentPane().add(modelTxtField);
 		 
-		 JLabel test2 = new JLabel("New label");
-		 springLayout.putConstraint(SpringLayout.NORTH, test2, 23, SpringLayout.SOUTH, test1);
-		 springLayout.putConstraint(SpringLayout.WEST, test2, 24, SpringLayout.WEST, getContentPane());
-		 test2.setVisible(false);
-		 test2.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 getContentPane().add(test2);
+		 JLabel descLabel = new JLabel("Description");
+		 springLayout.putConstraint(SpringLayout.WEST, descLabel, 20, SpringLayout.WEST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.SOUTH, descLabel, -6, SpringLayout.NORTH, display);
+		 descLabel.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 getContentPane().add(descLabel);
 		 
-		 textField2 = new JTextField();
-		 springLayout.putConstraint(SpringLayout.EAST, test2, -2, SpringLayout.WEST, textField2);
-		 springLayout.putConstraint(SpringLayout.NORTH, textField2, 16, SpringLayout.SOUTH, textField1);
-		 springLayout.putConstraint(SpringLayout.WEST, textField2, 131, SpringLayout.WEST, getContentPane());
-		 springLayout.putConstraint(SpringLayout.EAST, textField2, 0, SpringLayout.EAST, textField);
-		 textField2.setFont(new Font("Verdana", Font.PLAIN, 13));
-		 textField2.setVisible(false);
-		 textField2.setColumns(10);
-		 getContentPane().add(textField2);
+		 descTxtField = new JTextField();
+		 springLayout.putConstraint(SpringLayout.EAST, descLabel, -6, SpringLayout.WEST, descTxtField);
+		 springLayout.putConstraint(SpringLayout.WEST, descTxtField, 0, SpringLayout.WEST, idTxtField);
+		 springLayout.putConstraint(SpringLayout.SOUTH, descTxtField, -6, SpringLayout.NORTH, display);
+		 springLayout.putConstraint(SpringLayout.EAST, descTxtField, 0, SpringLayout.EAST, idTxtField);
+		 descTxtField.setFont(new Font("Verdana", Font.PLAIN, 13));
+		 descTxtField.setColumns(10);
+		 getContentPane().add(descTxtField);
 		 
-		 JLabel test4 = new JLabel("New label");
-		 springLayout.putConstraint(SpringLayout.NORTH, test4, 22, SpringLayout.NORTH, getContentPane());
-		 springLayout.putConstraint(SpringLayout.WEST, test4, 538, SpringLayout.WEST, getContentPane());
-		 springLayout.putConstraint(SpringLayout.EAST, test4, -169, SpringLayout.EAST, getContentPane());
-		 springLayout.putConstraint(SpringLayout.EAST, textField, -268, SpringLayout.WEST, test4);
-		 test4.setVisible(false);
-		 test4.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 getContentPane().add(test4);
+		 JLabel priceLabel = new JLabel("Unit Price:");
+		 springLayout.putConstraint(SpringLayout.NORTH, modelTxtField, -5, SpringLayout.NORTH, priceLabel);
+		 springLayout.putConstraint(SpringLayout.EAST, priceLabel, -169, SpringLayout.EAST, getContentPane());
+		 priceLabel.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 getContentPane().add(priceLabel);
 		 
-		 textField4 = new JTextField();
-		 springLayout.putConstraint(SpringLayout.NORTH, textField4, 22, SpringLayout.NORTH, getContentPane());
-		 springLayout.putConstraint(SpringLayout.WEST, textField4, 6, SpringLayout.EAST, test4);
-		 springLayout.putConstraint(SpringLayout.EAST, textField4, -20, SpringLayout.EAST, getContentPane());
-		 textField4.setFont(new Font("Verdana", Font.PLAIN, 13));
-		 textField4.setVisible(false);
-		 textField4.setColumns(10);
-		 getContentPane().add(textField4);
+		 priceTxtField = new JTextField();
+		 springLayout.putConstraint(SpringLayout.NORTH, priceTxtField, -5, SpringLayout.NORTH, priceLabel);
+		 springLayout.putConstraint(SpringLayout.WEST, priceTxtField, 6, SpringLayout.EAST, priceLabel);
+		 springLayout.putConstraint(SpringLayout.EAST, priceTxtField, -20, SpringLayout.EAST, getContentPane());
+		 priceTxtField.setFont(new Font("Verdana", Font.PLAIN, 13));
+		 priceTxtField.setColumns(10);
+		 getContentPane().add(priceTxtField);
 		 
-		 JLabel test5 = new JLabel("New label");
-		 springLayout.putConstraint(SpringLayout.NORTH, test5, 39, SpringLayout.SOUTH, test4);
-		 springLayout.putConstraint(SpringLayout.WEST, test5, 268, SpringLayout.EAST, textField1);
-		 test5.setVisible(false);
-		 test5.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 getContentPane().add(test5);
+		 JLabel orderQtyLabel = new JLabel("Order Qty:");
+		 springLayout.putConstraint(SpringLayout.SOUTH, priceLabel, -43, SpringLayout.NORTH, orderQtyLabel);
+		 springLayout.putConstraint(SpringLayout.WEST, orderQtyLabel, 538, SpringLayout.WEST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.WEST, priceLabel, 0, SpringLayout.WEST, orderQtyLabel);
+		 orderQtyLabel.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 getContentPane().add(orderQtyLabel);
 		 
-		 textField5 = new JTextField();
-		 springLayout.putConstraint(SpringLayout.EAST, test5, -10, SpringLayout.WEST, textField5);
-		 springLayout.putConstraint(SpringLayout.NORTH, textField5, 27, SpringLayout.SOUTH, textField4);
-		 springLayout.putConstraint(SpringLayout.WEST, textField5, 627, SpringLayout.WEST, getContentPane());
-		 springLayout.putConstraint(SpringLayout.EAST, textField5, -20, SpringLayout.EAST, getContentPane());
-		 textField5.setFont(new Font("Verdana", Font.PLAIN, 13));
-		 textField5.setVisible(false);
+		 orderQtyTxtField = new JTextField();
+		 springLayout.putConstraint(SpringLayout.WEST, orderQtyTxtField, 623, SpringLayout.WEST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.EAST, orderQtyLabel, -6, SpringLayout.WEST, orderQtyTxtField);
+		 springLayout.putConstraint(SpringLayout.EAST, orderQtyTxtField, -24, SpringLayout.EAST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.NORTH, orderQtyLabel, 5, SpringLayout.NORTH, orderQtyTxtField);
+		 springLayout.putConstraint(SpringLayout.SOUTH, orderQtyTxtField, -6, SpringLayout.NORTH, display);
+		 orderQtyTxtField.setFont(new Font("Verdana", Font.PLAIN, 13));
 		 
 		 JButton addToBasket = new JButton("Add to Basket");
-		 sl_display.putConstraint(SpringLayout.NORTH, addToBasket, 6, SpringLayout.SOUTH, scrollPane);
-		 sl_display.putConstraint(SpringLayout.WEST, addToBasket, 0, SpringLayout.WEST, display);
+		 sl_display.putConstraint(SpringLayout.WEST, addToBasket, 63, SpringLayout.WEST, display);
+		 sl_display.putConstraint(SpringLayout.EAST, addToBasket, -588, SpringLayout.EAST, display);
 		 addToBasket.addActionListener(new ActionListener() 
 		 {
-		 	public void actionPerformed(ActionEvent e) 
+		 	public void actionPerformed(ActionEvent e)
 		 	{
+		 		
 		 		try
-		 			{
-			 			
-		 				Crud add = new Crud();
-
-		 				int stock = Integer.parseInt(textField3.getText());
-		 				int ordered= Integer.parseInt(textField5.getText());
-		 				System.out.println(stock+"\n"+ordered);
-		 				if(stock >=ordered)
-			 				{
-			 				
-						 		String query ="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product";
-						 		genTable(query);
-						 		clear();
-						 		
-						 		try 
-							 		{
-										add.close();
-									} 
-							 	catch (SQLException e1) 
-							 		{
-										
-							 		ErrorMessage err = new ErrorMessage("Error Updating Customer records. "+e1);
-									}
-			 				}
-		 				else
-		 					{
-		 						Info info= new Info("the quantity ordered exceeds the stock available");
-		 						textField5.setText("");
-		 					}
-		 				
+		 			{	 					 		
+			 				int prodID= Integer.parseInt(idTxtField.getText());
+			 				int stock = Integer.parseInt(inStockTxtField.getText());
+			 				int ordered= Integer.parseInt(orderQtyTxtField.getText());
+			 				Crud add = new Crud();
+			 				if((stock >=ordered))
+				 				{
+			 						add.insertBasket(prodID, ordered);
+				 				
+							 		//String query ="SELECT ProductID as 'Stock Code', ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where QuantityInStock >0";
+			 						String query ="SELECT Product.ProductID as 'Product ID', ModelNo as 'Model', Description, Basket.Quantity as 'Quantity ordered', ProductRetail as 'Price in €' From Product inner join Basket on Product.productID= Basket.ProductID";
+			 						genTable(query);
+							 		clear();
+							 		
+							 		try 
+								 		{
+											add.close();
+										} 
+								 	catch (SQLException e1) 
+								 		{
+											
+								 		ErrorMessage err = new ErrorMessage("Error Updating Customer records. "+e1);
+										}
+				 				}
+			 				else
+			 					{
+			 						Info info= new Info("the quantity ordered exceeds the stock available");
+			 						orderQtyTxtField.setText("");
+			 					}
 		 			}
 		 		catch(NumberFormatException nfe)
 		 			{
 		 				ErrorMessage err = new ErrorMessage("the value entered Must be a whole number ");
-		 				textField5.setText("");
+		 				orderQtyTxtField.setText("");
 		 			}
+		 		
 		 		catch(Exception e2)
 		 			{
 		 				ErrorMessage err = new ErrorMessage("Error Updating Customer records. "+ e2);
@@ -232,83 +221,21 @@ public class Shop extends JFrame
 		 	}
 		 });
 		 addToBasket.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 addToBasket.setVisible(false);
 		 display.add(addToBasket);
 		 
-		 JButton deleteCustomerBtn = new JButton("Remove from basket");
-		 sl_display.putConstraint(SpringLayout.NORTH, deleteCustomerBtn, 6, SpringLayout.SOUTH, scrollPane);
-		 sl_display.putConstraint(SpringLayout.EAST, addToBasket, -6, SpringLayout.WEST, deleteCustomerBtn);
-		 deleteCustomerBtn.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		try
-		 			{
-		 			
-				 		Crud delete=new Crud();
-				 		String query ="DELETE from basket   WHERE ProductID=?";
-				 		String q2="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where ProductID > 0";
-				 		String id= textField.getText();
-				 		delete.adminDelete(query, id);
-				 		clear();
-				 		try 
-					 		{
-								delete.close();
-							} 
-				 		catch (SQLException e1) 
-					 		{
-								// TODO Auto-generated catch block
-								ErrorMessage err = new ErrorMessage("Error deleting Customer record. "+e1);
-							}
-				 		genTable(q2);
-				 		clear();
-				 		//textField.setText("");textField1.setText("");	textField2.setText("");	textField3.setText("");	textField4.setText("");
-		 			}
-		 		catch(Exception e2)
-		 			{
-		 				ErrorMessage err = new ErrorMessage("Error deleting Customer record. "+ e2);
-		 			}
-		 		}
-		 });
-		 deleteCustomerBtn.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 deleteCustomerBtn.setVisible(false);
-		 display.add(deleteCustomerBtn);
+		 orderQtyTxtField.setColumns(10);
+		 getContentPane().add(orderQtyTxtField);
 		 
-		 textField5.setColumns(10);
-		 getContentPane().add(textField5);
-		 
-		 JLabel test6 = new JLabel("New label");
-		 springLayout.putConstraint(SpringLayout.NORTH, display, 6, SpringLayout.SOUTH, test6);
-		 springLayout.putConstraint(SpringLayout.SOUTH, display, 375, SpringLayout.SOUTH, test6);
-		 springLayout.putConstraint(SpringLayout.NORTH, test6, 49, SpringLayout.SOUTH, test5);
-		 springLayout.putConstraint(SpringLayout.SOUTH, test6, -385, SpringLayout.SOUTH, getContentPane());
-		 test6.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 test6.setVisible(false);
-		 getContentPane().add(test6);
-		 
-		 textField6 = new JTextField();
-		 springLayout.putConstraint(SpringLayout.EAST, test6, 0, SpringLayout.WEST, textField6);
-		 springLayout.putConstraint(SpringLayout.WEST, textField6, 0, SpringLayout.WEST, textField4);
-		 springLayout.putConstraint(SpringLayout.SOUTH, textField6, -385, SpringLayout.SOUTH, getContentPane());
-		 springLayout.putConstraint(SpringLayout.EAST, textField6, -20, SpringLayout.EAST, getContentPane());
-		 textField6.setFont(new Font("Verdana", Font.PLAIN, 13));
-		 textField6.setVisible(false);
-		 getContentPane().add(textField6);
-		 textField6.setColumns(10);
-		 
-		 textField3 = new JTextField();
-		 springLayout.putConstraint(SpringLayout.SOUTH, textField3, -6, SpringLayout.NORTH, display);
-		 springLayout.putConstraint(SpringLayout.WEST, test6, 268, SpringLayout.EAST, textField3);
-		 springLayout.putConstraint(SpringLayout.WEST, textField3, 131, SpringLayout.WEST, getContentPane());
-		 springLayout.putConstraint(SpringLayout.EAST, textField3, 0, SpringLayout.EAST, textField);
-		 getContentPane().add(textField3);
-		 textField3.setFont(new Font("Verdana", Font.PLAIN, 13));
-		 textField3.setVisible(false);
-		 textField3.setColumns(10);
+		 inStockTxtField = new JTextField();
+		 springLayout.putConstraint(SpringLayout.NORTH, inStockTxtField, -5, SpringLayout.NORTH, idLabel);
+		 springLayout.putConstraint(SpringLayout.EAST, inStockTxtField, 0, SpringLayout.EAST, priceTxtField);
+		 getContentPane().add(inStockTxtField);
+		 inStockTxtField.setFont(new Font("Verdana", Font.PLAIN, 13));
+	
+		 inStockTxtField.setColumns(10);
 		 
 		 JButton clearBasket = new JButton("Clear Basket");
-		 sl_display.putConstraint(SpringLayout.WEST, clearBasket, 272, SpringLayout.WEST, display);
-		 sl_display.putConstraint(SpringLayout.EAST, deleteCustomerBtn, -6, SpringLayout.WEST, clearBasket);
+		 sl_display.putConstraint(SpringLayout.NORTH, addToBasket, 0, SpringLayout.NORTH, clearBasket);
 		 sl_display.putConstraint(SpringLayout.NORTH, clearBasket, 6, SpringLayout.SOUTH, scrollPane);
 		 clearBasket.addActionListener(new ActionListener() 
 		 {
@@ -319,7 +246,7 @@ public class Shop extends JFrame
 		 			
 	 				Crud clear = new Crud();
 	 				clear.adminDelete("delete * from Basket", "*");
-			 		String query ="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where ProductID > 0";
+			 		String query ="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where QuantityInStock > 0";
 			 		genTable(query);
 			 		clear();
 			 		
@@ -340,136 +267,26 @@ public class Shop extends JFrame
 		 	}
 		 });
 		 clearBasket.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 clearBasket.setVisible(false);
 		 display.add(clearBasket);
 		 
-		 //	Delete a product
-		 JButton productDelete = new JButton("Product Delete");
-		 sl_display.putConstraint(SpringLayout.NORTH, productDelete, 6, SpringLayout.SOUTH, scrollPane);
-		 productDelete.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		try
-	 			{
-	 			
-			 		Crud delete=new Crud();
-			 		String query ="DELETE from Product  WHERE ProductID=?";
-			 		String q2="select * from Product";
-			 		String id= textField.getText();
-			 		delete.adminDelete(query, id);
-			 		clear();
-			 		try 
-				 		{
-							delete.close();
-						} 
-			 		catch (SQLException e1) 
-				 		{
-							ErrorMessage err = new ErrorMessage("Error deleting Product record. "+e1);
-						}
-			 		genTable(q2);
-			 		clear();
-			 		
-	 			}
-	 		catch(Exception e2)
-	 			{
-	 				ErrorMessage err = new ErrorMessage("Error deleting Product record. "+ e2);
-	 			}
-	 		}
-		 });
-		 productDelete.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 productDelete.setVisible(false);
-		 display.add(productDelete);
+		 JLabel inStockLabel = new JLabel("In Stock:");
+		 springLayout.putConstraint(SpringLayout.NORTH, inStockLabel, -3, SpringLayout.NORTH, idLabel);
+		 springLayout.putConstraint(SpringLayout.WEST, inStockLabel, 0, SpringLayout.WEST, priceLabel);
+		 springLayout.putConstraint(SpringLayout.SOUTH, inStockLabel, -116, SpringLayout.NORTH, display);
+		 sl_display.putConstraint(SpringLayout.WEST, inStockLabel, 0, SpringLayout.WEST, display);
+		 sl_display.putConstraint(SpringLayout.SOUTH, inStockLabel, -6, SpringLayout.NORTH, display);
+		 sl_display.putConstraint(SpringLayout.EAST, inStockLabel, 15, SpringLayout.EAST, addToBasket);
+		 getContentPane().add(inStockLabel);
+		 inStockLabel.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		 
-		 JLabel test3 = new JLabel("New label");
-		 springLayout.putConstraint(SpringLayout.NORTH, test3, 21, SpringLayout.SOUTH, test2);
-		 springLayout.putConstraint(SpringLayout.WEST, test3, 24, SpringLayout.WEST, getContentPane());
-		 springLayout.putConstraint(SpringLayout.SOUTH, test3, -6, SpringLayout.NORTH, display);
-		 springLayout.putConstraint(SpringLayout.EAST, test3, -32, SpringLayout.WEST, textField3);
-		 sl_display.putConstraint(SpringLayout.WEST, test3, 0, SpringLayout.WEST, display);
-		 sl_display.putConstraint(SpringLayout.SOUTH, test3, -6, SpringLayout.NORTH, display);
-		 sl_display.putConstraint(SpringLayout.EAST, test3, 15, SpringLayout.EAST, addToBasket);
-		 test3.setVisible(false);
-		 getContentPane().add(test3);
-		 test3.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 
-		 JLabel lblNewLabel = new JLabel("");
-		 springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, -4, SpringLayout.NORTH, display);
-		 
-		 JButton updateSupplier_1 = new JButton("Update Supplier");
-		 sl_display.putConstraint(SpringLayout.NORTH, updateSupplier_1, 6, SpringLayout.SOUTH, scrollPane);
-		 updateSupplier_1.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		try
-	 			{
-		 			
-	 				Crud update = new Crud();
-			 		update.adminSuppliertUpdateDetails(textField1.getText(),textField2.getText(),textField3.getText(),textField4.getText(),textField.getText());
-			 		String query ="SELECT * from Supplier";
-			 		genTable(query);
-			 		clear();
-			 		
-			 		try 
-				 		{
-							update.close();
-						} 
-				 	catch (SQLException e1) 
-				 		{
-							
-				 		ErrorMessage err = new ErrorMessage("Error Updating Supplier records. "+e1);
-						}
-	 			}
-	 		catch(Exception e2)
-	 			{
-	 				ErrorMessage err = new ErrorMessage("Error Updating Supplier records. "+ e2);
-	 			}
-		 	}
-		 });
-		 sl_display.putConstraint(SpringLayout.EAST, productDelete, -6, SpringLayout.WEST, updateSupplier_1);
-		 updateSupplier_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 updateSupplier_1.setVisible(false);
-		 display.add(updateSupplier_1);
-		 
-		 JButton deleteSupplier_1 = new JButton("Delete Supplier");
-		 deleteSupplier_1.addActionListener(new ActionListener() 
-		 {
-		 	public void actionPerformed(ActionEvent e) 
-		 	{
-		 		try
-	 			{
-	 			
-			 		Crud delete=new Crud();
-			 		String query ="DELETE from Supplier  WHERE SupplierID=?";
-			 		String q2="select * from Supplier";
-			 		String id= textField.getText();
-			 		delete.adminDelete(query, id);
-			 		clear();
-			 		try 
-				 		{
-							delete.close();
-						} 
-			 		catch (SQLException e1) 
-				 		{
-							ErrorMessage err = new ErrorMessage("Error deleting Supplier record. "+e1);
-						}
-			 		genTable(q2);
-			 		clear();
-			 		
-	 			}
-	 		catch(Exception e2)
-	 			{
-	 				ErrorMessage err = new ErrorMessage("Error deleting Supplier record. "+ e2);
-	 			}
-		 	}
-		 });
-		 sl_display.putConstraint(SpringLayout.EAST, updateSupplier_1, -6, SpringLayout.WEST, deleteSupplier_1);
-		 sl_display.putConstraint(SpringLayout.NORTH, deleteSupplier_1, 6, SpringLayout.SOUTH, scrollPane);
-		 sl_display.putConstraint(SpringLayout.EAST, deleteSupplier_1, 0, SpringLayout.EAST, scrollPane);
-		 deleteSupplier_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		 deleteSupplier_1.setVisible(false);
-		 display.add(deleteSupplier_1);
+		 JLabel logoLabel = new JLabel("");
+		 springLayout.putConstraint(SpringLayout.EAST, modelTxtField, -41, SpringLayout.WEST, logoLabel);
+		 springLayout.putConstraint(SpringLayout.EAST, inStockLabel, 302, SpringLayout.WEST, logoLabel);
+		 springLayout.putConstraint(SpringLayout.WEST, inStockTxtField, 117, SpringLayout.EAST, logoLabel);
+		 springLayout.putConstraint(SpringLayout.EAST, logoLabel, -276, SpringLayout.EAST, getContentPane());
+		 springLayout.putConstraint(SpringLayout.EAST, idTxtField, -41, SpringLayout.WEST, logoLabel);
+		 springLayout.putConstraint(SpringLayout.SOUTH, logoLabel, -383, SpringLayout.SOUTH, getContentPane());
+		 springLayout.putConstraint(SpringLayout.NORTH, display, 4, SpringLayout.SOUTH, logoLabel);
 		 
 		 JLabel title = new JLabel("");
 		 sl_display.putConstraint(SpringLayout.NORTH, title, 0, SpringLayout.NORTH, display);
@@ -479,11 +296,46 @@ public class Shop extends JFrame
 		 title.setHorizontalAlignment(SwingConstants.CENTER);
 		 title.setFont(new Font("Times New Roman", Font.BOLD, 18));
 		 display.add(title);
-		 springLayout.putConstraint(SpringLayout.EAST, lblNewLabel, -28, SpringLayout.WEST, test4);
+		 
+		 JButton btnNewButton = new JButton("Customer Window");
+		 sl_display.putConstraint(SpringLayout.WEST, btnNewButton, 563, SpringLayout.WEST, display);
+		 sl_display.putConstraint(SpringLayout.EAST, btnNewButton, -37, SpringLayout.EAST, display);
+		 sl_display.putConstraint(SpringLayout.EAST, clearBasket, -52, SpringLayout.WEST, btnNewButton);
+		 sl_display.putConstraint(SpringLayout.NORTH, btnNewButton, 6, SpringLayout.SOUTH, scrollPane);
+		 sl_display.putConstraint(SpringLayout.SOUTH, btnNewButton, -10, SpringLayout.SOUTH, display);
+		 btnNewButton.addActionListener(new ActionListener() 
+		 {
+		 	public void actionPerformed(ActionEvent e) 
+		 	{
+		 		Customer customer = new Customer(email);
+				customer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				customer.setSize(800,600);
+				customer.setLocation(300,100);
+				customer.setVisible(true);
+				customer.setResizable(false);
+				dispose();
+		 	}
+		 });
+		 btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 display.add(btnNewButton);
+		 
+		 JButton btnNewButton_1 = new JButton("Checkout");
+		 btnNewButton_1.addActionListener(new ActionListener() 
+		 {
+		 	public void actionPerformed(ActionEvent e) 
+		 	{
+		 	}
+		 });
+		 sl_display.putConstraint(SpringLayout.NORTH, btnNewButton_1, 6, SpringLayout.SOUTH, scrollPane);
+		 sl_display.putConstraint(SpringLayout.WEST, btnNewButton_1, 75, SpringLayout.EAST, addToBasket);
+		 sl_display.putConstraint(SpringLayout.SOUTH, btnNewButton_1, -10, SpringLayout.SOUTH, display);
+		 sl_display.putConstraint(SpringLayout.EAST, btnNewButton_1, -40, SpringLayout.WEST, clearBasket);
+		 btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		 display.add(btnNewButton_1);
 		 
 		 //	Company Logo
-		 lblNewLabel.setIcon(new ImageIcon(Shop.class.getResource("/Project/logo3a.jpg")));
-		 getContentPane().add(lblNewLabel);
+		 logoLabel.setIcon(new ImageIcon(Shop.class.getResource("/Project/logo3a.jpg")));
+		 getContentPane().add(logoLabel);
 		 
 		 // the menu bar upon which the menus sit.
 		 JMenuBar menuBar = new JMenuBar();
@@ -506,48 +358,11 @@ public class Shop extends JFrame
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
-		 		title.setText("Product Window");
+		 		
 		 		clear();
-		 		title.setText("Product Catalogue");
-		 		test.setVisible(true);
-		 		textField.setVisible(true);
-		 		test.setText("Product ID:");
+		 		title.setText("Product Catalogue");	 		
+		 			 		
 		 		
-		 		test1.setVisible(true);
-		 		textField1.setVisible(true);
-		 		textField1.setEditable(false);
-		 		test1.setText(" Model:");
-		 		
-		 		test2.setVisible(true);
-		 		textField2.setVisible(true);
-		 		textField2.setEditable(false); 		 		
-		 		test2.setText("Description:");
-		 		
-		 		test3.setVisible(true);
-		 		textField3.setVisible(true);
-		 		textField3.setEditable(false);
-		 		test3.setText("In Stock:");
-		 		
-		 		test4.setVisible(true);
-		 		textField4.setVisible(true);
-		 		textField4.setEditable(false);
-		 		test4.setText("Unit Price:");
-		 		
-		 		test5.setVisible(true);
-		 		textField5.setVisible(true);
-		 		test5.setText("Order Quantity:");
-		 		
-		 		test6.setVisible(true);
-		 		textField6.setVisible(false);
-		 		test6.setText("Unit Retail:");
-		 		
-		 		addToBasket.setVisible(true);
-		 		clearBasket.setVisible(true);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(false);
 		 		clear();
 		 
 		 		
@@ -559,97 +374,93 @@ public class Shop extends JFrame
 		 });
 		 ProductMenu.add(ViewProducts);
 		 
-		 JMenuItem updateProducts = new JMenuItem("Update Quantity");
-		 updateProducts.addActionListener(new ActionListener() 
+		 JMenuItem updateOrder = new JMenuItem("Update Order Quantity");
+		 updateOrder.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
-		 		state= "select SupplierId, ModelNo, Description, QuantityInStock,ProductCost, ProductRetail from Product where ProductID = ? ";
-		 		title.setText("Product Window");
-		 		test.setVisible(true);
-		 		textField.setVisible(true);
-		 		test.setText("Product ID:");
+		 		try
+	 			{	 					 		
+		 				int prodID= Integer.parseInt(idTxtField.getText());
+		 				int stock = Integer.parseInt(inStockTxtField.getText());
+		 				int ordered= Integer.parseInt(orderQtyTxtField.getText());
+		 				Crud update = new Crud();
+		 				if((stock >=ordered))
+			 				{
+		 						update.updatetBasket(prodID, ordered);
+			 				
+						 		//String query ="SELECT ProductID as 'Stock Code', ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where QuantityInStock >0";
+		 						String query ="SELECT Product.ProductID as 'Product ID', ModelNo as 'Model', Description, Basket.Quantity as 'Quantity ordered', ProductRetail as 'Price in €' From Product inner join Basket on Product.productID= Basket.ProductID";
+		 						genTable(query);
+						 		clear();
+						 		
+						 		try 
+							 		{
+										update.close();
+									} 
+							 	catch (SQLException e1) 
+							 		{
+										
+							 		ErrorMessage err = new ErrorMessage("Error Updating Customer records. "+e1);
+									}
+			 				}
+		 				else
+		 					{
+		 						Info info= new Info("the quantity ordered exceeds the stock available");
+		 						orderQtyTxtField.setText("");
+		 					}
+	 			}
+	 		catch(NumberFormatException nfe)
+	 			{
+	 				ErrorMessage err = new ErrorMessage("the value entered Must be a whole number ");
+	 				orderQtyTxtField.setText("");
+	 			}
+	 		
+	 		catch(Exception e2)
+	 			{
+	 				ErrorMessage err = new ErrorMessage("Error Updating Customer records. "+ e2);
+	 			}	
+	 		
+	 	
 		 		
-		 		test1.setVisible(true);
-		 		textField1.setVisible(true);
-		 		test1.setText(" Supplier ID:");
-		 		
-		 		test2.setVisible(true);
-		 		textField2.setVisible(true);
-		 		test2.setText("Model No:");
-		 		
-		 		test3.setVisible(true);
-		 		textField3.setVisible(true);
-		 		test3.setText("Description:");
-		 		
-		 		test4.setVisible(true);
-		 		textField4.setVisible(true);
-		 		test4.setText("Qty In Stock:");
-		 		
-		 		test5.setVisible(true);
-		 		textField5.setVisible(true);
-		 		test5.setText("Unit Cost:");
-		 		
-		 		test6.setVisible(true);
-		 		textField6.setVisible(true);
-		 		test6.setText("Unit Retail:");
-		 		
-		 		addToBasket.setVisible(false);
-		 		clearBasket.setVisible(true);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(false);
-		 		deleteSupplier_1.setVisible(false);
+		 		state= "select  ModelNo, Description, QuantityInStock, ProductRetail from Product where ProductID = ? and QuantityInStock > 0";
 		 		clear();
 		 		
 		 	}
 		 });
-		 ProductMenu.add(updateProducts);
+		 
+		 JMenuItem mntmNewMenuItem = new JMenuItem("View Basket");
+		 mntmNewMenuItem.addActionListener(new ActionListener() 
+		 {
+		 	public void actionPerformed(ActionEvent e) 
+		 	{
+		 		title.setText("Basket");
+		 		String query ="SELECT Product.ProductID as 'Product ID', ModelNo as 'Model', Description, Basket.Quantity as 'Quantity ordered', ProductRetail as 'Price in €' From Product inner join Basket on Product.productID= Basket.ProductID";
+		 		state="SELECT ModelNo, Description,QuantityInStock , ProductRetail  From Product where ProductID=?";
+		 		genTable(query);
+		 	}
+		 });
+		 ProductMenu.add(mntmNewMenuItem);
+		 ProductMenu.add(updateOrder);
 		 
 		 JMenuItem deleteProducts = new JMenuItem("Remove From Basket");
 		 deleteProducts.addActionListener(new ActionListener() 
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
-		 		state= "select SupplierId, ModelNo, Description, QuantityInStock,ProductCost, ProductRetail from Product where ProductID = ?";
-		 		title.setText("Product Window");
-		 		test.setVisible(true);
-		 		textField.setVisible(true);
-		 		test.setText("Product ID:");
-		 		
-		 		test1.setVisible(true);
-		 		textField1.setVisible(true);
-		 		test1.setText(" Supplier ID:");
-		 		
-		 		test2.setVisible(true);
-		 		textField2.setVisible(true);
-		 		test2.setText("Model No:");
-		 		
-		 		test3.setVisible(true);
-		 		textField3.setVisible(true);
-		 		test3.setText("Description:");
-		 		
-		 		test4.setVisible(true);
-		 		textField4.setVisible(true);
-		 		test4.setText("Qty In Stock:");
-		 		
-		 		test5.setVisible(true);
-		 		textField5.setVisible(true);
-		 		test5.setText("Unit Cost:");
-		 		
-		 		test6.setVisible(true);
-		 		textField6.setVisible(true);
-		 		test6.setText("Unit Retail:");
-		 		
-		 		addToBasket.setVisible(false);
-		 		clearBasket.setVisible(false);
-		 		updateSupplier_1.setVisible(false);
-		 		
-		 		deleteCustomerBtn.setVisible(false);
-		 		productDelete.setVisible(true);
-		 		deleteSupplier_1.setVisible(false);
-		 		clear();
+		 		try 
+		 			{
+		 				Crud basDel = new Crud();
+						int id =Integer.parseInt(idTxtField.getText());
+						basDel.basketDelete(id);
+						state= "select  ModelNo, Description, QuantityInStock, ProductRetail from Product where ProductID = ?";					
+						clear();
+		 			} 
+		 		catch (NumberFormatException e1) 
+		 		{
+					// TODO Auto-generated catch block
+					ErrorMessage err = new ErrorMessage("The ID must be a whole number");
+				}
 		 	}
 		 });
 		 ProductMenu.add(deleteProducts);
@@ -773,14 +584,14 @@ public class Shop extends JFrame
 					while( resultSet .next() )
 						{
 							
-							textField1.setText(resultSet.getString(1));
-							textField2.setText(resultSet.getString(2));
-							textField3.setText(resultSet.getString(3));
-							textField4.setText(resultSet.getString(4));
+							modelTxtField.setText(resultSet.getString(1));
+							descTxtField.setText(resultSet.getString(2));
+							inStockTxtField.setText(resultSet.getString(3));
+							priceTxtField.setText(resultSet.getString(4));
 							
 							if(columns==5)
 								{
-									textField5.setText(resultSet.getString(5));
+									orderQtyTxtField.setText(resultSet.getString(5));
 								
 								}
 							
@@ -810,12 +621,6 @@ public class Shop extends JFrame
  	}
  	public void clear()	//	clears all the text fields when called. 
 	{
-		textField.setText("");textField1.setText("");	textField2.setText("");	textField3.setText("");	textField4.setText("");textField5.setText("");textField6.setText("");
+		idTxtField.setText("");modelTxtField.setText("");	descTxtField.setText("");	inStockTxtField.setText("");	priceTxtField.setText("");orderQtyTxtField.setText("");
 	}
- 	public void hide() // resets all text fields to hidden.
- 	{
- 		textField.setVisible(false);textField1.setVisible(false);textField2.setVisible(false);textField3.setVisible(false);
- 		textField4.setVisible(false);textField5.setVisible(false);textField6.setVisible(false);
- 		
- 	}
 }// End of file.
