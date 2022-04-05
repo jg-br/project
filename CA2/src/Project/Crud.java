@@ -19,6 +19,8 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
@@ -87,50 +89,7 @@ public class Crud  implements Connection
 				}
 				
 			}
-			public void displayCustomers()
-			{
-				ResultSet resultSet = null ;
-				
-				
-				try
-					{
-						//connection = DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword());
-						pstat = connection.prepareStatement("SELECT CustomerName, CustomerAddress, CustomerPhone, CustomerEmail, CustomerPassword FROM Customer");
-						// query data in the table
-						resultSet = pstat.executeQuery();
-						// process query results
-						ResultSetMetaData metaData = resultSet.getMetaData();
-						int numberOfColumns = metaData.getColumnCount();
-						System.out. println ( "Authors Table of Books Database:\n" );
-						for ( int i = 1; i <= numberOfColumns; i++ )
-						System.out. print (metaData.getColumnName( i ) + "\t");
-						System.out. println () ;
-						while( resultSet .next() )
-							{
-								for ( int i = 1; i <= numberOfColumns; i++ )
-								System.out. print ( resultSet .getObject( i ) + "\t\t");
-								System.out. println () ;
-							}
-					
-					}
-				catch(SQLException sqlException ) 
-					{
-						sqlException . printStackTrace () ;
-					}
-				finally 
-					{
-						try
-							{
-								resultSet . close () ;
-								pstat . close () ;
-								connection. close () ;
-							}
-						catch (Exception exception)
-							{
-								exception . printStackTrace () ;
-							}
-					}
-			}
+			
 			//	method to ensure that the email entered when creating an account does NOT already exist in the customer table.
 			public boolean emailCheck(String email )
 			{
@@ -174,6 +133,86 @@ public class Crud  implements Connection
 						catch (Exception exception)
 							{
 								exception . printStackTrace () ;
+							}
+					}
+				return false;
+			}
+			public boolean passwordCheck(String password, int id )
+			{
+				ResultSet resultSet = null ;
+				
+				
+				try
+					{
+						//connection = DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword());
+						pstat = connection.prepareStatement("select CustomerPassword from Customer where CustomerId = ?");
+						pstat.setInt(1, id);
+						// query data in the table
+						resultSet = pstat.executeQuery();
+						// process query results
+						ResultSetMetaData metaData = resultSet.getMetaData();
+						int numberOfColumns = metaData.getColumnCount();
+						while( resultSet .next() )
+							{
+								
+								if( resultSet .getObject(numberOfColumns).equals(password));
+									{
+										return true;
+									}
+							
+							}
+						return false;
+					
+					}
+				catch(SQLException sqlException ) 
+					{
+					ErrorMessage err = new ErrorMessage("Database Error "+ sqlException);					}
+				finally 
+					{
+						try
+							{
+								resultSet . close () ;
+								pstat . close () ;
+								//connection. close () ;
+							}
+						catch (Exception exception)
+							{
+							ErrorMessage err = new ErrorMessage("Application Error "+ exception);
+							}
+					}
+				return false;
+			}
+			public boolean passwordUpdate(String password, int id )
+			{
+				
+				
+				
+				try
+					{
+				
+						pstat = connection.prepareStatement("Update Customer set CustomerPassword=? where CustomerID=?");
+						pstat.setString(1, password);
+						pstat.setInt(2, id);
+						// update data in the table
+					
+						
+						int status=	 pstat.executeUpdate();	
+						Info message = new Info(status+" record updated");
+					
+					}
+				catch(SQLException sqlException ) 
+					{
+					ErrorMessage err = new ErrorMessage("Database Error "+ sqlException);					}
+				finally 
+					{
+						try
+							{
+								pstat . close () ;
+								//connection. close () ;
+							}
+						catch (Exception exception)
+							{
+							ErrorMessage err = new ErrorMessage("Application Error "+ exception);
 							}
 					}
 				return false;
@@ -771,6 +810,130 @@ public class Crud  implements Connection
 						}
 				}
 			}
+			public void clearBasket()
+			{
+				try 
+				{
+					
+					pstat = connection.prepareStatement("delete from Basket");				
+					
+									
+					// Delete Customer from Customer table
+					
+					int status = pstat.executeUpdate();
+					String message = ( " Basket Cleared sucsessfully");
+					
+					Info mess = new Info(message);
+				}
+				
+			catch(SQLException sqlException) 
+				{
+					ErrorMessage err = new ErrorMessage("Error Deleting Account "+sqlException);
+					
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							connection.close () ;
+						}
+					catch (Exception exception)
+						{
+//							Error dialogue to display catch any non_SQL Errors.
+							ErrorMessage err = new ErrorMessage("Error Deleting Account "+ exception);
+						}
+				}
+			}
+			
+			public void insertInvoice(int cusID)
+			{
+				try 
+				{
+					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");  
+			        LocalDateTime now = LocalDateTime.now();  
+
+			        String date=dtf.format(now);
+					
+					//	Insert statement for supplier 
+					pstat = connection.prepareStatement("INSERT INTO Invoice (CustomerId, InvoiceDate) VALUES (?,?)");
+					pstat.setInt (1, cusID ) ;
+					pstat.setString(2,date);
+					
+				
+					
+					// insert data into table
+					
+					int status = pstat.executeUpdate();
+					
+				}
+				
+			catch(SQLException sqlEx) 
+				{
+					ErrorMessage err = new ErrorMessage("Database error" + sqlEx);	//	displays an error dialogue box with the SQL error message
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							//connection.close () ;
+						}
+					catch (Exception ex)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Application Error Generating Invoice" + ex);	//	Displays an error dialogue with any non-SQL errors 
+						}
+				}
+				
+			}
+			public int invoiceRetrive(int cusID)
+			{
+				int invNum=0;
+				try 
+				{
+					
+					ResultSet rs =null;
+					//	Insert statement for supplier 
+					pstat = connection.prepareStatement("Select InvoiceId from Invoice where CustomerId=?");
+					pstat.setInt (1, cusID ) ;
+				
+					
+					// insert data into table
+					rs= pstat.executeQuery();
+					// process query results
+					ResultSetMetaData metaData = rs.getMetaData();
+					int numberOfColumns = metaData.getColumnCount();
+					
+					while( rs.next() )
+						{
+							invNum=rs.getInt(numberOfColumns);
+						}
+					
+					
+				}
+				
+			catch(SQLException sqlEx) 
+				{
+					ErrorMessage err = new ErrorMessage("Database error" + sqlEx);	//	displays an error dialogue box with the SQL error message
+				}
+			finally 
+				{
+					try 
+						{
+							pstat.close () ;
+							//connection.close () ;
+						}
+					catch (Exception ex)
+						{
+							//exception.printStackTrace () ;
+							ErrorMessage err = new ErrorMessage("Application Error Generating Invoice" + ex);	//	Displays an error dialogue with any non-SQL errors 
+						}
+				}
+				return invNum;
+			}
+			
+			
 			@Override
 			public <T> T unwrap(Class<T> iface) throws SQLException {
 				// TODO Auto-generated method stub

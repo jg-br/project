@@ -48,8 +48,8 @@ public class Customer extends JFrame
 	
 	public Customer(String email) 
 	{
+		super("Customer Window");
 			Crud c = new Crud();
-			
 			details = c.customerDetails(email);
 			
 			for(int i=0;i<arr.length;i++)
@@ -63,8 +63,8 @@ public class Customer extends JFrame
 			address=arr[2];
 			phone=arr[3];
 		
-			
 		
+	
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Customer.class.getResource("/Project/logo3b.jpg")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setBackground(Color.GRAY);
@@ -213,7 +213,7 @@ public class Customer extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				Shop shop = new Shop(email);
+				Shop shop = new Shop(email, account);
 				shop.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				shop.setSize(800,600);
 				shop.setLocation(300,100);
@@ -239,17 +239,50 @@ public class Customer extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				Crud update =new Crud();
-				update.customerUpdateDetails(nameField.getText(),addressDetails.getText(), phoneNoField.getText(),accountNumber.getText() );
-				nameField.setEditable(false);
-				phoneNoField.setEditable(false);
-				addressDetails.setEditable(false);
-				updateDetailsButton.setEnabled(false);			
+				try 
+				{
+					Crud update =new Crud();
+					update.customerUpdateDetails(nameField.getText(),addressDetails.getText(), phoneNoField.getText(),accountNumber.getText() );
+					nameField.setEditable(false);
+					phoneNoField.setEditable(false);
+					addressDetails.setEditable(false);
+					updateDetailsButton.setEnabled(false);
+				} 
+				catch (Exception e1) 
+				{
+				
+					ErrorMessage err = new ErrorMessage("Application Error "+ e1);
+				}	
+				
 			}			
 		});
 		updateDetailsButton.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(updateDetailsButton);		
 		JButton changePasswoord = new JButton("Change password");
+		changePasswoord.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				
+				try
+					{
+						int id = Integer.parseInt(account);
+						ChangePassword ch = new ChangePassword(email,id);
+						ch.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+						ch.setSize(640,300);
+						ch.setLocation(300,100);
+						ch.setVisible(true);
+						ch.setResizable(false);
+						dispose();
+					
+					} 
+				catch (NumberFormatException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}
+		});
 		springLayout.putConstraint(SpringLayout.NORTH, changePasswoord, 1, SpringLayout.NORTH, viewProductButton);
 		changePasswoord.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(changePasswoord);
@@ -274,6 +307,8 @@ public class Customer extends JFrame
 		orderPanel.add(scrollPane);
 		
 		table = new JTable();
+		table.setColumnSelectionAllowed(true);
+		table.setCellSelectionEnabled(true);
 		scrollPane.setViewportView(table);
 		closeAccount.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(closeAccount);

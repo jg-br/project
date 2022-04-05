@@ -47,7 +47,7 @@ public class Shop extends JFrame
 	private JTextField priceTxtField;
 	private JTextField orderQtyTxtField;
 	private String state;
- 	public Shop(String email)
+ 	public Shop(String email, String account)
 	{	
 		
 		super("Shop");
@@ -71,6 +71,9 @@ public class Shop extends JFrame
 		 display.setLayout(sl_display);	//	set the layout of the panel
 		 
 		 table = new JTable();		//	creates a new Jtable
+		 table.setColumnSelectionAllowed(true);
+		 table.setCellSelectionEnabled(true);
+		 table.setToolTipText("Enter the product ID in the field labelled ID");
 		 table.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		 table.setFont(new Font("Verdana", Font.PLAIN, 13));
 		 sl_display.putConstraint(SpringLayout.NORTH, table, 61, SpringLayout.NORTH, display);
@@ -245,7 +248,7 @@ public class Shop extends JFrame
 	 			{
 		 			
 	 				Crud clear = new Crud();
-	 				clear.adminDelete("delete * from Basket", "*");
+	 				clear.clearBasket();
 			 		String query ="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where QuantityInStock > 0";
 			 		genTable(query);
 			 		clear();
@@ -324,6 +327,87 @@ public class Shop extends JFrame
 		 {
 		 	public void actionPerformed(ActionEvent e) 
 		 	{
+		 		int qty=0;
+		 		int prodId=0;
+		 		int instock=0;
+		 		Config t = new Config();
+		 		final String DATABASE_URL = "jdbc:mysql://localhost:64000/CA3";
+				Connection con = null ;
+		 		PreparedStatement pstat=null;
+		 		ResultSet rs=null;
+		 		ResultSet rs1=null;
+			 	try
+			 		{
+			 		
+			 		int id= Integer.parseInt(account);
+			 		int invoiceNo=0;
+			 		Crud checkout =new Crud();
+			 		checkout.insertInvoice(id);
+			 		invoiceNo=checkout.invoiceRetrive(id);
+			 		
+			 		try {
+						checkout.close();
+					} catch (SQLException  e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			 		
+			 		
+			 		con= DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword());
+					pstat = con.prepareStatement("select ProductID, Quantity from Basket");
+					rs=pstat.executeQuery();
+					while(rs.next())
+					{
+						prodId=rs.getInt(1);
+						qty=rs.getInt(2);
+						
+						pstat=con.prepareStatement("select QuantityInStock from Product where ProductID=?");
+						pstat.setInt(1,prodId);
+						rs1=pstat.executeQuery();
+							while(rs1.next())
+							{
+								instock=rs1.getInt(1);
+							}
+						
+							instock= instock-qty;
+							
+						pstat=con.prepareStatement("Update Product set QuantityInStock=? where ProductID=?");
+						pstat.setInt(1,instock);
+						pstat.setInt(2, prodId);
+						pstat.executeUpdate();
+						
+						pstat = con.prepareStatement("Insert into InvoiceProduct (InvoiceId, ProductId,Qty) values (?,?,?)");
+						pstat.setInt (1, invoiceNo);
+						pstat.setInt (2, prodId ) ;
+						pstat.setInt(3, qty);
+						pstat.executeUpdate();
+						pstat= con.prepareStatement("delete  from Basket");
+						pstat.executeUpdate();
+						
+					}
+						Info info = new Info("Checkout Sucsessful");
+						
+						
+					} 
+			 	catch (SQLException e1) 
+			 	{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+				}
+			 	finally
+			 	{
+			 		try
+			 		{
+			 			con.close();
+			 		}
+			 		catch(SQLException sql)
+			 		{
+			 			ErrorMessage err = new ErrorMessage("Database connection Error "+ sql);
+			 		}
+			 		
+			 	}
+			 		
+		 		
 		 	}
 		 });
 		 sl_display.putConstraint(SpringLayout.NORTH, btnNewButton_1, 6, SpringLayout.SOUTH, scrollPane);

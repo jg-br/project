@@ -796,6 +796,7 @@ public class Admin extends JFrame
 		 		supply.setSize(720,430);
 		 		supply.setLocation(300,200);
 		 		supply.setVisible(true);
+		 		supply.setResizable(false);
 		 		dispose();
 		 	}
 		 });

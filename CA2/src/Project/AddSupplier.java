@@ -49,7 +49,7 @@ public class AddSupplier extends JFrame
 		supplierName.setColumns(10);
 		
 		//	Supplier name and supplier address labels
-		JLabel SupplierNameLbl = new JLabel(" Enter Supplier Name:");
+		JLabel SupplierNameLbl = new JLabel("Supplier Name:");
 		springLayout.putConstraint(SpringLayout.NORTH, SupplierNameLbl, 69, SpringLayout.NORTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, SupplierNameLbl, 25, SpringLayout.WEST, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, SupplierNameLbl, -546, SpringLayout.EAST, getContentPane());
@@ -58,7 +58,7 @@ public class AddSupplier extends JFrame
 		SupplierNameLbl.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(SupplierNameLbl);
 		
-		JLabel supplierAddressLbl = new JLabel("Enter Supplier Address:");
+		JLabel supplierAddressLbl = new JLabel("Supplier Address:");
 		springLayout.putConstraint(SpringLayout.NORTH, supplierAddressLbl, 119, SpringLayout.NORTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, supplierAddressLbl, 25, SpringLayout.WEST, getContentPane());
 		supplierAddressLbl.setFont(new Font("Times New Roman", Font.BOLD, 13));
@@ -70,7 +70,7 @@ public class AddSupplier extends JFrame
 		supplierPhone.setColumns(10);
 		
 //		supplier phone number label and email label
-		JLabel supplierPhoneNoLbl = new JLabel("Enter Supplier Phone No:");	
+		JLabel supplierPhoneNoLbl = new JLabel("Supplier Phone No:");	
 		springLayout.putConstraint(SpringLayout.WEST, supplierPhone, 24, SpringLayout.EAST, supplierPhoneNoLbl);
 		springLayout.putConstraint(SpringLayout.SOUTH, supplierAddressLbl, -41, SpringLayout.NORTH, supplierPhoneNoLbl);
 		springLayout.putConstraint(SpringLayout.NORTH, supplierPhoneNoLbl, 3, SpringLayout.NORTH, supplierPhone);
@@ -80,7 +80,7 @@ public class AddSupplier extends JFrame
 		supplierPhoneNoLbl.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		getContentPane().add(supplierPhoneNoLbl);
 		
-		JLabel supplierEmailLbl = new JLabel("Enter Email:");
+		JLabel supplierEmailLbl = new JLabel("Supplier  Email:");
 		springLayout.putConstraint(SpringLayout.NORTH, supplierEmailLbl, 251, SpringLayout.NORTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, supplierEmailLbl, 25, SpringLayout.WEST, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, supplierEmailLbl, -558, SpringLayout.EAST, getContentPane());
