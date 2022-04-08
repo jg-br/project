@@ -350,7 +350,7 @@ public class Customer extends JFrame
 	 		try 
 		 		{
 		 			con= DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword()); 
-					pstat = con.prepareStatement("Select Invoice.InvoiceID,Product.ProductID,Product.ModelNo,Product.Description,InvoiceProduct.Qty,ProductRetail \r\n"
+					pstat = con.prepareStatement("Select Invoice.InvoiceID,Product.ProductID,Product.ModelNo,Product.Description,InvoiceProduct.Qty,ProductRetail,InvoiceDate \r\n"
 							+ "from Invoice inner join Customer on Customer.CustomerID=Invoice.CustomerId \r\n"
 							+ "inner Join InvoiceProduct on InvoiceProduct.InvoiceID= Invoice.InvoiceId inner join \r\n"
 							+ "Product on InvoiceProduct.ProductId= Product.ProductID  where Customer.CustomerID=?");
@@ -380,7 +380,8 @@ public class Customer extends JFrame
 									email=result.getString(4);
 									phone=result.getString(5);							
 									password=result.getString(6);
-									String[] row = {id,name,address,email,phone,password};
+									retail=result.getString(7);
+									String[] row = {id,name,address,email,phone,password,retail};
 									model.addRow(row);
 							
 						}

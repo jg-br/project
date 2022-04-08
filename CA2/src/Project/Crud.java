@@ -98,7 +98,7 @@ public class Crud  implements Connection
 				
 				try
 					{
-						//connection = DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword());
+						
 						pstat = connection.prepareStatement("select * from Customer where customerEmail = ?");
 						pstat.setString(1, email);
 						// query data in the table
@@ -128,7 +128,7 @@ public class Crud  implements Connection
 							{
 								resultSet . close () ;
 								pstat . close () ;
-								//connection. close () ;
+								//connection. close () ; The connection object isn't closed as there are other queries are performed by the calling class
 							}
 						catch (Exception exception)
 							{

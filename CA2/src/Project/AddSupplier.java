@@ -135,12 +135,7 @@ public class AddSupplier extends JFrame
 					address=supplierAddress.getText();
 					phone= supplierPhone.getText();
 					email=	supplierEmail.getText();
-					
-					Crud insert = new Crud();
-					
-					
-					
-						
+										
 							Crud insert2 = new Crud();
 							insert2.insertSupplier(name, address, phone, email);	//calls the insert supplier method form the crud.
 							try 

@@ -190,6 +190,7 @@ public class Shop extends JFrame
 			 						add.insertBasket(prodID, ordered);
 				 				
 							 		//String query ="SELECT ProductID as 'Stock Code', ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where QuantityInStock >0";
+			 						
 			 						String query ="SELECT Product.ProductID as 'Product ID', ModelNo as 'Model', Description, Basket.Quantity as 'Quantity ordered', ProductRetail as 'Price in €' From Product inner join Basket on Product.productID= Basket.ProductID";
 			 						genTable(query);
 							 		clear();
@@ -248,7 +249,7 @@ public class Shop extends JFrame
 	 			{
 		 			
 	 				Crud clear = new Crud();
-	 				clear.clearBasket();
+	 				clear.clearBasket();	//	calls the Crud class method to clear the basket 
 			 		String query ="SELECT ProductID, ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where QuantityInStock > 0";
 			 		genTable(query);
 			 		clear();
@@ -350,8 +351,7 @@ public class Shop extends JFrame
 					} catch (SQLException  e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}
-			 		
+					}			 		
 			 		
 			 		con= DriverManager.getConnection(DATABASE_URL, t.getUsername(), t.getPassword());
 					pstat = con.prepareStatement("select ProductID, Quantity from Basket");
@@ -385,6 +385,7 @@ public class Shop extends JFrame
 						pstat.executeUpdate();
 						
 					}
+					
 						Info info = new Info("Checkout Sucsessful");
 						
 						
@@ -406,8 +407,8 @@ public class Shop extends JFrame
 			 		}
 			 		
 			 	}
-			 		
-		 		
+			 	String query ="SELECT ProductID as 'Product ID', ModelNo as 'Model', Description,QuantityInStock as 'Stock on hand', ProductRetail as 'Price in €' From Product where  QuantityInStock >0";	
+		 		genTable(query);
 		 	}
 		 });
 		 sl_display.putConstraint(SpringLayout.NORTH, btnNewButton_1, 6, SpringLayout.SOUTH, scrollPane);
@@ -539,12 +540,13 @@ public class Shop extends JFrame
 						basDel.basketDelete(id);
 						state= "select  ModelNo, Description, QuantityInStock, ProductRetail from Product where ProductID = ?";					
 						clear();
-		 			} 
+		 			}	
 		 		catch (NumberFormatException e1) 
 		 		{
 					// TODO Auto-generated catch block
 					ErrorMessage err = new ErrorMessage("The ID must be a whole number");
 				}
+		 		
 		 	}
 		 });
 		 ProductMenu.add(deleteProducts);
@@ -585,15 +587,12 @@ public class Shop extends JFrame
 					
 					String id,name,address,email,phone,password,retail;
 					while(result.next())
-						{
-							
+						{							
 									id= result.getString(1);
 									name=result.getString(2);
 									address=result.getString(3);
 									email=result.getString(4);
-									phone=result.getString(5);
-									
-									
+									phone=result.getString(5);											
 									
 							if(columns==6)
 								{

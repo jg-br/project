@@ -34,18 +34,18 @@ public class Config
     public void setCredentials() 
     {        
          
-        preferences.put("books_username",this.username);
-        preferences.put("books_password", this.password);
+        preferences.put("ca3_username",this.username);
+        preferences.put("ca3_password", this.password);
     }
 
     public String getUsername() 
     {
-        return preferences.get("books_username", null);
+        return preferences.get("ca3_username", null);
     }
 
     public String getPassword() 
     {
-        return preferences.get("books_password", null);
+        return preferences.get("ca3_password", null);
     }
      
  
